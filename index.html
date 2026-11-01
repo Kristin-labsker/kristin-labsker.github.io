@@ -67,12 +67,13 @@ p{margin:0}
 /* nav */
 .nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:color-mix(in srgb,var(--mist) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid color-mix(in srgb,var(--ink) 8%,transparent)}
 .nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:14px}
-.brand{font-family:var(--font-display);font-variation-settings:"SOFT" 100;font-weight:600;font-size:1.15rem;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:10px}
+.brand{white-space:nowrap;font-family:var(--font-display);font-variation-settings:"SOFT" 100;font-weight:600;font-size:1.15rem;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:10px}
 .brand-mark{width:28px;height:28px;flex:none}
 .nav ul{list-style:none;display:flex;gap:clamp(12px,2.4vw,30px);margin:0;padding:0;font-size:var(--step--1)}
 .nav a{color:var(--muted);text-decoration:none}
 .nav a:hover{color:var(--ink)}
 @media (max-width:640px){.nav .hide-sm{display:none}}
+@media (max-width:400px){.brand-mark{display:none}.nav ul{gap:12px}}
 
 /* hero */
 .hero{background:var(--mist);color:var(--ink)}
