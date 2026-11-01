@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wide World Importers SQL</title>
+<meta name="description" content="T-SQL analysis of the WideWorldImporters database by Kristin Labsker.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Crect width='26' height='26' rx='13' fill='%23E7DDD3'/%3E%3Crect x='6' y='13' width='3.2' height='7' rx='1' fill='%232A2623'/%3E%3Crect x='11.4' y='9' width='3.2' height='11' rx='1' fill='%232A2623'/%3E%3Crect x='16.8' y='5.5' width='3.2' height='14.5' rx='1' fill='%232A2623'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..700,0..100,0..1;1,9..144,300..700,0..100,0..1&family=Public+Sans:ital,wght@0,400..700;1,400&display=swap">
+<style>
+/* Layout: soft sage hero with a toolkit ledger, project rows (evergreen chart cover + case text, alternating), about with a dated timeline, skills ledger, evergreen contact band. */
+:root{
+  --pine:#E6ECF0;       /* contact band: mist blue */
+  --pine-2:#E3D8CE;
+  --cover:#EEE7E0;      /* project image ground: warm stone */
+  --moss:#7C2A3F;       /* links: deep wine */
+  --brass:#8C2F47;      /* the one accent: wine */
+  --rose-soft:#F1EBE5;  /* neutral linen wash */
+  --blue:#56708A;       /* second color: dusty slate blue */
+  --blue-soft:#E6ECF0;
+  --mist:#F3EEE8;       /* hero ground: linen */
+  --field:#FBF9F6;      /* page ground: ivory */
+  --surface:#FFFFFF;
+  --ink:#2A2623;        /* warm charcoal */
+  --muted:#76695F;      /* taupe */
+  --line:#E7DFD7;
+  --on-pine:#2A2623;
+  --on-pine-muted:#76695F;
+  --font-display:"Fraunces","Lora",Georgia,"Times New Roman",serif;
+  --font-body:"Public Sans","Segoe UI",system-ui,-apple-system,sans-serif;
+  --step--1:clamp(.82rem,.8rem + .1vw,.88rem);
+  --step-0:clamp(1rem,.97rem + .15vw,1.08rem);
+  --step-1:clamp(1.2rem,1.1rem + .4vw,1.4rem);
+  --step-2:clamp(1.5rem,1.3rem + .9vw,2rem);
+  --step-3:clamp(2.1rem,1.6rem + 2.2vw,3.3rem);
+  --step-4:clamp(2.5rem,1.8rem + 3.4vw,4.6rem);
+  --radius:20px;
+  --wrap:1180px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --pine:#1E252B;--pine-2:#332C28;--blue:#9DB4CA;--blue-soft:#1F262C;--cover:#EEE7E0;--moss:#E3A3B3;--brass:#D98A9E;--rose-soft:#2A2421;
+  --mist:#1F1B19;--field:#181514;--surface:#221D1B;--ink:#EFE9E4;--muted:#B6AAA1;--line:#3A322E;
+  --on-pine:#EFE9E4;--on-pine-muted:#B6AAA1;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --pine:#1E252B;--pine-2:#332C28;--blue:#9DB4CA;--blue-soft:#1F262C;--cover:#EEE7E0;--moss:#E3A3B3;--brass:#D98A9E;--rose-soft:#2A2421;
+  --mist:#1F1B19;--field:#181514;--surface:#221D1B;--ink:#EFE9E4;--muted:#B6AAA1;--line:#3A322E;
+  --on-pine:#EFE9E4;--on-pine-muted:#B6AAA1;color-scheme:dark}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--field);color:var(--ink);font-family:var(--font-body);font-size:var(--step-0);line-height:1.65;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--mist)}
+img,svg{max-width:100%;display:block}
+a{color:var(--moss);text-underline-offset:.22em;text-decoration-thickness:1px}
+a:hover{text-decoration-thickness:2px;color:var(--brass)}
+:focus-visible{outline:2px solid var(--brass);outline-offset:3px;border-radius:4px}
+h1,h2,h3{font-family:var(--font-display);font-optical-sizing:auto;font-variation-settings:"SOFT" 100,"WONK" 0;line-height:1.1;text-wrap:balance;margin:0;font-weight:500;letter-spacing:-.015em}
+p{margin:0}
+.band{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:var(--wrap);margin-inline:auto}
+.skip{position:absolute;left:-999px;top:8px;background:var(--surface);color:var(--ink);padding:8px 12px;z-index:20}
+.skip:focus{left:16px}
+
+/* nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:color-mix(in srgb,var(--mist) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid color-mix(in srgb,var(--ink) 8%,transparent)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:14px}
+.brand{white-space:nowrap;font-family:var(--font-display);font-variation-settings:"SOFT" 100;font-weight:600;font-size:1.15rem;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:10px}
+.brand-mark{width:28px;height:28px;flex:none}
+.nav ul{list-style:none;display:flex;gap:clamp(12px,2.4vw,30px);margin:0;padding:0;font-size:var(--step--1)}
+.nav a{color:var(--muted);text-decoration:none}
+.nav a:hover{color:var(--ink)}
+@media (max-width:640px){.nav .hide-sm{display:none}}
+@media (max-width:400px){.brand-mark{display:none}.nav ul{gap:12px}}
+
+/* hero */
+.hero{background:var(--mist);color:var(--ink)}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:clamp(32px,6vw,88px);align-items:end;padding-block:clamp(56px,9vw,116px) clamp(48px,7vw,88px)}
+.hero-kicker{color:var(--muted);font-size:var(--step--1);margin-bottom:22px;display:flex;align-items:center;gap:10px}
+.hero-kicker::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--blue)}
+.hero h1{font-size:var(--step-4);font-weight:400;letter-spacing:-.025em;max-width:15ch;line-height:1.04}
+.hero h1 em{font-style:normal;color:var(--moss)}
+.hero-lede{margin-top:26px;max-width:54ch;color:var(--muted);font-size:var(--step-1);line-height:1.55}
+.hero-actions{margin-top:34px;display:flex;flex-wrap:wrap;gap:12px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:999px;font-weight:600;font-size:.95rem;text-decoration:none;border:1px solid transparent;transition:background-color .2s,border-color .2s,color .2s}
+.btn-primary{background:var(--brass);color:#FFFFFF}
+.btn-primary:hover{background:color-mix(in srgb,var(--brass) 86%,#000);color:#FFFFFF}
+.btn-ghost{color:var(--ink);border-color:color-mix(in srgb,var(--ink) 25%,transparent)}
+.btn-ghost:hover{border-color:var(--ink);color:var(--ink)}
+.contact .btn-ghost{color:var(--on-pine);border-color:color-mix(in srgb,var(--on-pine) 30%,transparent)}
+.contact .btn-ghost:hover{border-color:var(--on-pine);color:var(--on-pine)}
+
+/* toolkit ledger in hero */
+.ledger{margin:0;background:color-mix(in srgb,var(--surface) 70%,transparent);border:1px solid color-mix(in srgb,var(--ink) 8%,transparent);border-radius:var(--radius);padding:6px 22px}
+.ledger-row{display:grid;grid-template-columns:5.5rem minmax(0,1fr);gap:16px;padding-block:15px;border-bottom:1px solid color-mix(in srgb,var(--ink) 9%,transparent)}
+.ledger-row:last-child{border-bottom:0}
+.ledger-row dt{font-family:var(--font-display);font-variation-settings:"SOFT" 100;font-weight:600;color:var(--ink)}
+.ledger-row dd{margin:0;color:var(--muted);font-size:var(--step--1);line-height:1.5}
+.ledger-note{margin-top:14px;font-size:var(--step--1);color:var(--muted);padding-left:22px}
+
+
+.crumb{display:inline-flex;align-items:center;gap:8px;color:var(--muted);font-size:var(--step--1);text-decoration:none;margin-bottom:26px}
+.crumb:hover{color:var(--ink)}
+.p-hero .wrap{display:block;padding-block:clamp(40px,7vw,88px) clamp(36px,5vw,64px)}
+.code-toggle{font:inherit;font-size:.95rem;font-weight:600;cursor:pointer}
+body.hide-code .code,body.hide-code .out pre,body.hide-code .out .table-wrap{display:none}
+body.hide-code .out{border-left:0;padding-left:0}
+.p-hero h1{font-size:var(--step-3);font-weight:400;letter-spacing:-.02em;max-width:22ch;margin-top:14px}
+.p-meta{display:flex;flex-wrap:wrap;gap:8px}
+.tag{font-size:.78rem;font-weight:600;padding:4px 11px;border-radius:999px;background:var(--blue-soft);color:var(--blue)}
+.tag-main{background:var(--ink);color:var(--field)}
+.p-question{margin-top:20px;font-family:var(--font-display);font-variation-settings:"SOFT" 100;font-style:italic;font-size:var(--step-1);line-height:1.45;color:var(--ink);padding:4px 0 4px 18px;border-left:2px solid var(--brass);max-width:60ch}
+.p-lede{margin-top:18px;color:var(--muted);max-width:62ch}
+.p-actions{margin-top:28px;display:flex;flex-wrap:wrap;gap:12px}
+.layout{display:grid;grid-template-columns:220px minmax(0,1fr);gap:clamp(28px,5vw,64px);padding-block:clamp(40px,6vw,72px)}
+.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 84px);align-self:start;max-height:calc(100vh - 110px);overflow:auto}
+.toc p{font-weight:600;font-size:.9rem;margin-bottom:10px}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;gap:2px;border-left:1px solid var(--line)}
+.toc a{display:block;padding:5px 0 5px 14px;margin-left:-1px;border-left:2px solid transparent;color:var(--muted);text-decoration:none;font-size:.86rem;line-height:1.35}
+.toc a:hover{color:var(--ink);border-left-color:var(--brass)}
+.doc{min-width:0;max-width:860px}
+.doc h2{font-size:var(--step-2);font-weight:500;margin:56px 0 14px;scroll-margin-top:90px}
+.doc h3{font-size:var(--step-1);font-weight:500;margin:36px 0 10px;scroll-margin-top:90px}
+.doc h4{font-family:var(--font-body);font-size:1rem;font-weight:700;margin:24px 0 8px}
+.doc > :first-child{margin-top:0}
+.doc p{margin:0 0 14px;max-width:70ch}
+.doc ul,.doc ol{margin:0 0 16px;padding-left:1.3em;max-width:70ch}
+.doc li{margin-bottom:6px}
+.doc li::marker{color:var(--brass)}
+.doc hr{border:0;border-top:1px solid var(--line);margin:40px 0}
+.doc strong{font-weight:650}
+.code{margin:14px 0;border:1px solid var(--line);border-radius:14px;background:var(--surface);overflow:hidden}
+.code-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:8px 14px;border-bottom:1px solid var(--line);font-size:.78rem;color:var(--muted);background:color-mix(in srgb,var(--mist) 60%,var(--surface))}
+.code pre{margin:0;padding:14px 16px;overflow-x:auto;font:13.5px/1.6 ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;color:var(--ink);tab-size:4}
+.out{margin:-6px 0 18px;padding:0 0 0 14px;border-left:2px solid var(--blue-soft)}
+.out pre{margin:0;padding:10px 0;overflow-x:auto;font:12.5px/1.55 ui-monospace,Menlo,Consolas,monospace;color:var(--muted);white-space:pre}
+.out img{display:block;max-width:100%;height:auto;border-radius:10px;margin:8px 0;background:#fff}
+.table-wrap{overflow-x:auto;margin:6px 0 4px}
+.table-wrap table{border-collapse:collapse;font-size:.8rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+.table-wrap th,.table-wrap td{padding:6px 10px;border-bottom:1px solid var(--line);text-align:right}
+.table-wrap thead th{color:var(--ink);font-weight:650;border-bottom:1px solid var(--muted)}
+.table-wrap tbody th{color:var(--muted);font-weight:500}
+.q{border-top:1px solid var(--line);padding-top:8px;margin-top:48px;scroll-margin-top:90px}
+.q:first-child{border-top:0;margin-top:0;padding-top:0}
+.q-num{font-size:.8rem;font-weight:600;color:var(--blue)}
+.q h2{margin:4px 0 8px}
+.callout{margin:40px 0 0;padding:22px 24px;border-radius:16px;background:var(--mist)}
+.callout h2{margin:0 0 10px}
+.p-foot{border-top:1px solid var(--line);padding-block:32px;color:var(--muted);font-size:var(--step--1)}
+.p-foot .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
+/* syntax colors, drawn from the site palette */
+.hl .c,.hl .c1,.hl .cm,.hl .cs,.hl .ch{color:#8A7B70;font-style:italic}
+.hl .k,.hl .kn,.hl .kd,.hl .kr,.hl .kc,.hl .ow,.hl .o.w{color:var(--brass);font-weight:600}
+.hl .nb,.hl .bp,.hl .nf,.hl .fm{color:var(--blue)}
+.hl .s,.hl .s1,.hl .s2,.hl .sa,.hl .sd,.hl .se,.hl .si,.hl .dl{color:#4F7A5F}
+.hl .m,.hl .mi,.hl .mf,.hl .il{color:#9A6A2F}
+.hl .nd{color:var(--blue)}
+@media (max-width:900px){.layout{grid-template-columns:minmax(0,1fr)}.toc{position:static;max-height:none}}
+</style>
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+<header class="nav band"><div class="wrap">
+  <a class="brand" href="../index.html"><svg class="brand-mark" viewBox="0 0 26 26" aria-hidden="true"><rect width="26" height="26" rx="13" fill="#E7DDD3"/><rect x="6" y="13" width="3.2" height="7" rx="1" fill="#2A2623"/><rect x="11.4" y="9" width="3.2" height="11" rx="1" fill="#2A2623"/><rect x="16.8" y="5.5" width="3.2" height="14.5" rx="1" fill="#2A2623"/></svg>Kristin Labsker</a>
+  <nav aria-label="Main"><ul><li><a href="../index.html#projects">Projects</a></li><li><a href="../index.html#about">About</a></li><li><a href="../index.html#contact">Contact</a></li></ul></nav>
+</div></header>
+<main>
+<section class="hero p-hero band"><div class="wrap">
+<a class="crumb" href="../index.html#projects">← All projects</a>
+<div class="p-meta"><span class="tag tag-main">SQL</span><span class="tag">T-SQL</span><span class="tag">Window functions</span><span class="tag">SQL Server</span></div>
+<h1>Wide World Importers: revenue, customers and churn risk</h1>
+<p class="p-question">How is the business growing, who are the customers that matter most, and where is the risk?</p>
+<p class="p-lede">Ten business questions answered with T-SQL on Microsoft's WideWorldImporters sample database, a wholesale company with sales, purchasing and warehouse tables. Each question below shows the full query.</p>
+<div class="p-actions"><a class="btn btn-primary" href="#conclusion">Jump to conclusion</a><a class="btn btn-ghost" href="https://github.com/Kristin-labsker/data-analyst-projects/blob/main/sql-wide-world-importers/WideWorldImporters_Analysis.sql" target="_blank" rel="noopener">Script on GitHub</a></div>
+</div></section>
+<div class="band"><div class="wrap layout">
+  <aside class="toc" aria-label="On this page"><p>On this page</p><ol><li><a href="#q1">1. Yearly revenue, annualized by active months, and year-over-year growth rate</a></li><li><a href="#q2">2. Top 5 customers by revenue in every quarter</a></li><li><a href="#q3">3. Top 10 products by total sales value</a></li><li><a href="#q4">4. Products ranked by nominal profit (retail price minus unit price)</a></li><li><a href="#q5">5. Each supplier with the list of products it supplies</a></li><li><a href="#q6">6. Top 5 customers by spend, with city, country, continent and region</a></li><li><a href="#q7">7. Monthly sales with yearly subtotals and a running total</a></li><li><a href="#q8">8. Number of orders per month, by year (2013-2016)</a></li><li><a href="#q9">9. Potential churn: days since last order compared with the customer&#x27;s average gap</a></li><li><a href="#q10">10. Customer distribution by category, counting each chain as one customer</a></li><li><a href="#conclusion">Conclusion</a></li></ol></aside>
+  <article class="doc" id="content">
+<section class="q" id="q1">
+<span class="q-num">Question 1 · CTEs, LAG</span>
+<h2>Yearly revenue, annualized by active months, and year-over-year growth rate</h2>
+<div class="code"><div class="code-head"><span>Question 1</span><span>T-SQL</span></div><pre class="hl"><span class="k">WITH</span><span class="w"> </span><span class="n">tab1</span>
+<span class="k">AS</span>
+<span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="nf">YEAR</span><span class="p">(</span><span class="n">si</span><span class="p">.</span><span class="n">InvoiceDate</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="ss">"Invoice Year"</span>
+<span class="w">      </span><span class="p">,</span><span class="nf">SUM</span><span class="p">(</span><span class="n">ol</span><span class="p">.</span><span class="n">UnitPrice</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">ol</span><span class="p">.</span><span class="n">Quantity</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">IncomePerYear</span>
+<span class="w">      </span><span class="p">,</span><span class="nf">COUNT</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="nf">MONTH</span><span class="p">(</span><span class="n">si</span><span class="p">.</span><span class="n">InvoiceDate</span><span class="p">))</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">NumberOfDistinctMonth</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">sales</span><span class="p">.</span><span class="n">Invoices</span><span class="w"> </span><span class="n">si</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">sales</span><span class="p">.</span><span class="n">OrderLines</span><span class="w"> </span><span class="n">ol</span>
+<span class="k">ON</span><span class="w"> </span><span class="n">si</span><span class="p">.</span><span class="n">OrderID</span><span class="o">=</span><span class="w"> </span><span class="n">ol</span><span class="p">.</span><span class="n">OrderID</span>
+<span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="nf">YEAR</span><span class="p">(</span><span class="n">si</span><span class="p">.</span><span class="n">InvoiceDate</span><span class="p">)</span>
+<span class="p">),</span>
+<span class="n">tab2</span>
+<span class="k">AS</span>
+<span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">tab1</span><span class="p">.</span><span class="o">*</span>
+<span class="w">      </span><span class="p">,(</span><span class="n">IncomePerYear</span><span class="o">/</span><span class="n">NumberOfDistinctMonth</span><span class="p">)</span><span class="o">*</span><span class="mi">12</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">YearlyLinearIncome</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">tab1</span><span class="w"> </span><span class="p">),</span>
+<span class="n">tab3</span>
+<span class="k">AS</span>
+<span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">tab2</span><span class="p">.</span><span class="o">*</span>
+<span class="w">             </span><span class="p">,</span><span class="n">LAG</span><span class="p">(</span><span class="n">YearlyLinearIncome</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="k">OVER</span><span class="p">(</span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">tab2</span><span class="p">.</span><span class="o">[</span><span class="n">Invoice Year</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">ShortL</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">tab2</span>
+<span class="p">)</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">[</span><span class="n">Invoice Year</span><span class="o">]</span>
+<span class="w">      </span><span class="p">,</span><span class="nf">FORMAT</span><span class="p">(</span><span class="n">IncomePerYear</span><span class="p">,</span><span class="s1">'#,#.00'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">IncomePerYear</span>
+<span class="w">      </span><span class="p">,</span><span class="nf">FORMAT</span><span class="p">(</span><span class="n">NumberOfDistinctMonth</span><span class="p">,</span><span class="s1">'#,#.00'</span><span class="p">)</span><span class="k">AS</span><span class="w"> </span><span class="n">NumberOfDistinctMonth</span>
+<span class="w">      </span><span class="p">,</span><span class="nf">CAST</span><span class="p">((</span><span class="n">YearlyLinearIncome</span><span class="o">-</span><span class="w"> </span><span class="n">ShortL</span><span class="p">)</span><span class="o">/</span><span class="n">ShortL</span><span class="o">*</span><span class="mi">100</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="nc">NUMERIC</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span><span class="k">AS</span><span class="w"> </span><span class="n">GrowthRate</span>
+<span class="k">from</span><span class="w"> </span><span class="n">tab3</span>
+</pre></div>
+</section>
+<section class="q" id="q2">
+<span class="q-num">Question 2 · DENSE_RANK, PARTITION BY</span>
+<h2>Top 5 customers by revenue in every quarter</h2>
+<div class="code"><div class="code-head"><span>Question 2</span><span>T-SQL</span></div><pre class="hl"><span class="k">WITH</span><span class="w"> </span><span class="n">tbl</span>
+<span class="k">AS</span>
+<span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="nf">YEAR</span><span class="p">(</span><span class="n">si</span><span class="p">.</span><span class="n">InvoiceDate</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">TheYear</span>
+<span class="w">       </span><span class="p">,</span><span class="nf">DATEPART</span><span class="p">(</span><span class="n">Q</span><span class="p">,</span><span class="n">si</span><span class="p">.</span><span class="n">InvoiceDate</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">TheQuarter</span>
+<span class="w">       </span><span class="p">,</span><span class="n">sc</span><span class="p">.</span><span class="n">CustomerName</span>
+<span class="w">       </span><span class="p">,</span><span class="nf">SUM</span><span class="p">(</span><span class="n">ol</span><span class="p">.</span><span class="n">UnitPrice</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">ol</span><span class="p">.</span><span class="n">Quantity</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">IncomePerYear</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">sales</span><span class="p">.</span><span class="n">Customers</span><span class="w"> </span><span class="n">sc</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">sales</span><span class="p">.</span><span class="n">Invoices</span><span class="w"> </span><span class="n">si</span>
+<span class="k">ON</span><span class="w"> </span><span class="n">sc</span><span class="p">.</span><span class="n">CustomerID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">si</span><span class="p">.</span><span class="n">CustomerID</span>
+<span class="k">JOIN</span><span class="w"> </span><span class="n">sales</span><span class="p">.</span><span class="n">OrderLines</span><span class="w"> </span><span class="n">ol</span>
+<span class="k">ON</span><span class="w"> </span><span class="n">ol</span><span class="p">.</span><span class="n">OrderID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">si</span><span class="p">.</span><span class="n">OrderID</span>
+<span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="nf">YEAR</span><span class="p">(</span><span class="n">si</span><span class="p">.</span><span class="n">InvoiceDate</span><span class="p">)</span>
+<span class="w">        </span><span class="p">,</span><span class="nf">DATEPART</span><span class="p">(</span><span class="n">Q</span><span class="p">,</span><span class="n">si</span><span class="p">.</span><span class="n">InvoiceDate</span><span class="p">)</span>
+<span class="w">        </span><span class="p">,</span><span class="n">sc</span><span class="p">.</span><span class="n">CustomerName</span><span class="p">),</span>
+<span class="n">tbl2</span>
+<span class="k">AS</span>
+<span class="p">(</span><span class="k">SELECT</span><span class="o">*</span>
+<span class="w">       </span><span class="p">,</span><span class="nf">DENSE_RANK</span><span class="p">()</span><span class="k">OVER</span><span class="p">(</span><span class="k">PARTITION</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">TheYear</span><span class="p">,</span><span class="n">TheQuarter</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">IncomePerYear</span><span class="w"> </span><span class="k">DESC</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">DNR</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">tbl</span><span class="p">)</span>
+<span class="k">SELECT</span><span class="o">*</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">tbl2</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">DNR</span><span class="o">&lt;=</span><span class="mi">5</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">TheYear</span>
+<span class="w">        </span><span class="p">,</span><span class="n">TheQuarter</span>
+<span class="w">        </span><span class="p">,</span><span class="n">DNR</span>
+</pre></div>
+</section>
+<section class="q" id="q3">
+<span class="q-num">Question 3 · TOP, aggregation</span>
+<h2>Top 10 products by total sales value</h2>
+<div class="code"><div class="code-head"><span>Question 3</span><span>T-SQL</span></div><pre class="hl"><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">TOP</span><span class="w"> </span><span class="mi">10</span>
+<span class="w">       </span><span class="n">sti</span><span class="p">.</span><span class="n">StockItemID</span><span class="p">,</span><span class="w"> </span><span class="n">sti</span><span class="p">.</span><span class="n">StockItemName</span>
+<span class="w">      </span><span class="p">,</span><span class="nf">SUM</span><span class="p">(</span><span class="n">sil</span><span class="p">.</span><span class="n">Quantity</span><span class="o">*</span><span class="n">sil</span><span class="p">.</span><span class="n">UnitPrice</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">TotalProfit</span>
+<span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">warehouse</span><span class="p">.</span><span class="n">StockItems</span><span class="w"> </span><span class="n">sti</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">sales</span><span class="p">.</span><span class="n">InvoiceLines</span><span class="w"> </span><span class="n">sil</span>
+<span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">sti</span><span class="p">.</span><span class="n">StockItemID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sil</span><span class="p">.</span><span class="n">StockItemID</span>
+<span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">sti</span><span class="p">.</span><span class="n">StockItemID</span><span class="p">,</span><span class="w"> </span><span class="n">sti</span><span class="p">.</span><span class="n">StockItemName</span>
+<span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">TotalProfit</span><span class="w"> </span><span class="k">DESC</span>
+</pre></div>
+</section>
+<section class="q" id="q4">
+<span class="q-num">Question 4 · DENSE_RANK</span>
+<h2>Products ranked by nominal profit (retail price minus unit price)</h2>
+<div class="code"><div class="code-head"><span>Question 4</span><span>T-SQL</span></div><pre class="hl"><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="n">tbl</span>
+<span class="w"> </span><span class="k">AS</span>
+<span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">sti</span><span class="p">.</span><span class="n">StockItemID</span>
+<span class="w">      </span><span class="p">,</span><span class="n">sti</span><span class="p">.</span><span class="n">StockItemName</span>
+<span class="w">      </span><span class="p">,</span><span class="n">sti</span><span class="p">.</span><span class="n">UnitPrice</span>
+<span class="w">      </span><span class="p">,</span><span class="n">sti</span><span class="p">.</span><span class="n">RecommendedRetailPrice</span>
+<span class="w">      </span><span class="p">,(</span><span class="n">sti</span><span class="p">.</span><span class="n">RecommendedRetailPrice</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">sti</span><span class="p">.</span><span class="n">UnitPrice</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">NominalProductProfit</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">Warehouse</span><span class="p">.</span><span class="n">StockItems</span><span class="w"> </span><span class="n">sti</span><span class="p">)</span>
+<span class="k">SELECT</span><span class="o">*</span>
+<span class="w">      </span><span class="p">,</span><span class="nf">DENSE_RANK</span><span class="p">()</span><span class="k">OVER</span><span class="p">(</span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">NominalProductProfit</span><span class="w"> </span><span class="k">DESC</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">DNR</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">tbl</span>
+</pre></div>
+</section>
+<section class="q" id="q5">
+<span class="q-num">Question 5 · STRING_AGG, CONCAT_WS</span>
+<h2>Each supplier with the list of products it supplies</h2>
+<div class="code"><div class="code-head"><span>Question 5</span><span>T-SQL</span></div><pre class="hl"><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="n">CONCAT_WS</span><span class="p">(</span><span class="s1">' - '</span><span class="p">,</span><span class="n">ps</span><span class="p">.</span><span class="n">SupplierID</span><span class="p">,</span><span class="n">ps</span><span class="p">.</span><span class="n">SupplierName</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">SupplierDetails</span>
+<span class="w">       </span><span class="p">,</span><span class="n">STRING_AGG</span><span class="p">(</span><span class="nf">CONCAT</span><span class="p">(</span><span class="n">sti</span><span class="p">.</span><span class="n">StockItemID</span><span class="w"> </span><span class="p">,</span><span class="s1">'  '</span><span class="p">,</span><span class="w"> </span><span class="n">sti</span><span class="p">.</span><span class="n">StockItemName</span><span class="p">),</span><span class="s1">' /, '</span><span class="p">)</span>
+<span class="w">       </span><span class="k">WITHIN</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="p">(</span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ps</span><span class="p">.</span><span class="n">SupplierID</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">ProductDetails</span>
+<span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">Purchasing</span><span class="p">.</span><span class="n">Suppliers</span><span class="w"> </span><span class="n">ps</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">Warehouse</span><span class="p">.</span><span class="n">StockItems</span><span class="w"> </span><span class="n">sti</span>
+<span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">ps</span><span class="p">.</span><span class="n">SupplierID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sti</span><span class="p">.</span><span class="n">SupplierID</span>
+<span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ps</span><span class="p">.</span><span class="n">SupplierID</span><span class="p">,</span><span class="n">ps</span><span class="p">.</span><span class="n">SupplierName</span>
+</pre></div>
+</section>
+<section class="q" id="q6">
+<span class="q-num">Question 6 · Multi-table joins</span>
+<h2>Top 5 customers by spend, with city, country, continent and region</h2>
+<div class="code"><div class="code-head"><span>Question 6</span><span>T-SQL</span></div><pre class="hl"><span class="w">  </span><span class="k">WITH</span><span class="w"> </span><span class="n">tbl</span>
+<span class="w">  </span><span class="k">AS</span>
+<span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">cus</span><span class="p">.</span><span class="n">CustomerID</span>
+<span class="w">        </span><span class="p">,</span><span class="n">cit</span><span class="p">.</span><span class="n">CityName</span>
+<span class="w">        </span><span class="p">,</span><span class="n">coun</span><span class="p">.</span><span class="n">CountryName</span>
+<span class="w">        </span><span class="p">,</span><span class="n">coun</span><span class="p">.</span><span class="n">Continent</span>
+<span class="w">        </span><span class="p">,</span><span class="n">coun</span><span class="p">.</span><span class="n">Region</span>
+<span class="w">        </span><span class="p">,</span><span class="nf">SUM</span><span class="p">(</span><span class="n">sil</span><span class="p">.</span><span class="n">ExtendedPrice</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">Total</span>
+<span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">sales</span><span class="p">.</span><span class="n">Customers</span><span class="w"> </span><span class="n">cus</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">Application</span><span class="p">.</span><span class="n">Cities</span><span class="w"> </span><span class="n">cit</span>
+<span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">cit</span><span class="p">.</span><span class="n">CityID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cus</span><span class="p">.</span><span class="n">PostalCityID</span>
+<span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">Application</span><span class="p">.</span><span class="n">StateProvinces</span><span class="w"> </span><span class="n">asp</span>
+<span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">asp</span><span class="p">.</span><span class="n">StateProvinceID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cit</span><span class="p">.</span><span class="n">StateProvinceID</span>
+<span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">Application</span><span class="p">.</span><span class="n">Countries</span><span class="w"> </span><span class="n">coun</span>
+<span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">coun</span><span class="p">.</span><span class="n">CountryID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">asp</span><span class="p">.</span><span class="n">CountryID</span>
+<span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">sales</span><span class="p">.</span><span class="n">Invoices</span><span class="w"> </span><span class="n">si</span>
+<span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">si</span><span class="p">.</span><span class="n">CustomerID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cus</span><span class="p">.</span><span class="n">CustomerID</span>
+<span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">sales</span><span class="p">.</span><span class="n">InvoiceLines</span><span class="w"> </span><span class="n">sil</span>
+<span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">sil</span><span class="p">.</span><span class="n">InvoiceID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">si</span><span class="p">.</span><span class="n">InvoiceID</span>
+<span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">cus</span><span class="p">.</span><span class="n">CustomerID</span>
+<span class="w">        </span><span class="p">,</span><span class="n">cit</span><span class="p">.</span><span class="n">CityName</span>
+<span class="w">        </span><span class="p">,</span><span class="n">coun</span><span class="p">.</span><span class="n">CountryName</span>
+<span class="w">        </span><span class="p">,</span><span class="n">coun</span><span class="p">.</span><span class="n">Continent</span>
+<span class="w">        </span><span class="p">,</span><span class="n">coun</span><span class="p">.</span><span class="n">Region</span><span class="p">)</span>
+<span class="w">  </span><span class="k">SELECT</span><span class="w"> </span><span class="k">TOP</span><span class="w"> </span><span class="mi">5</span>
+<span class="w">             </span><span class="n">tbl</span><span class="p">.</span><span class="n">CustomerID</span>
+<span class="w">            </span><span class="p">,</span><span class="n">tbl</span><span class="p">.</span><span class="n">CityName</span>
+<span class="w">            </span><span class="p">,</span><span class="n">tbl</span><span class="p">.</span><span class="n">CountryName</span>
+<span class="w">            </span><span class="p">,</span><span class="n">tbl</span><span class="p">.</span><span class="n">Continent</span>
+<span class="w">            </span><span class="p">,</span><span class="n">tbl</span><span class="p">.</span><span class="n">Region</span>
+<span class="w">            </span><span class="p">,</span><span class="nf">FORMAT</span><span class="p">(</span><span class="n">tbl</span><span class="p">.</span><span class="n">Total</span><span class="w"> </span><span class="p">,</span><span class="s1">'#,#.00'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">TotalExpendedPrice</span>
+
+<span class="w">  </span><span class="k">FROM</span><span class="w"> </span><span class="n">tbl</span>
+<span class="w">  </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">Total</span><span class="w"> </span><span class="k">DESC</span>
+</pre></div>
+</section>
+<section class="q" id="q7">
+<span class="q-num">Question 7 · ROLLUP, windowed SUM</span>
+<h2>Monthly sales with yearly subtotals and a running total</h2>
+<div class="code"><div class="code-head"><span>Question 7</span><span>T-SQL</span></div><pre class="hl"><span class="k">WITH</span><span class="w"> </span><span class="n">tbl</span>
+<span class="k">AS</span>
+<span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="nf">YEAR</span><span class="p">(</span><span class="n">si</span><span class="p">.</span><span class="n">InvoiceDate</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">InvoiceYear</span>
+<span class="w">        </span><span class="p">,</span><span class="nf">CAST</span><span class="p">(</span><span class="nf">MONTH</span><span class="p">(</span><span class="n">si</span><span class="p">.</span><span class="n">InvoiceDate</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="nc">VARCHAR</span><span class="p">(</span><span class="mi">15</span><span class="p">))</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">InvoiceMonth</span>
+<span class="w">        </span><span class="p">,</span><span class="nf">MONTH</span><span class="p">(</span><span class="n">si</span><span class="p">.</span><span class="n">InvoiceDate</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">mn</span>
+<span class="w">        </span><span class="p">,</span><span class="nf">SUM</span><span class="p">(</span><span class="n">sil</span><span class="p">.</span><span class="n">Quantity</span><span class="o">*</span><span class="n">sil</span><span class="p">.</span><span class="n">UnitPrice</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">MonthlyTotal</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">Sales</span><span class="p">.</span><span class="n">Invoices</span><span class="w"> </span><span class="n">si</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">Sales</span><span class="p">.</span><span class="n">InvoiceLines</span><span class="w"> </span><span class="n">sil</span>
+<span class="k">ON</span><span class="w"> </span><span class="n">si</span><span class="p">.</span><span class="n">InvoiceID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sil</span><span class="p">.</span><span class="n">InvoiceID</span>
+<span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">ROLLUP</span><span class="p">(</span><span class="nf">YEAR</span><span class="p">(</span><span class="n">si</span><span class="p">.</span><span class="n">InvoiceDate</span><span class="p">),</span><span class="nf">MONTH</span><span class="p">(</span><span class="n">si</span><span class="p">.</span><span class="n">InvoiceDate</span><span class="p">))</span>
+<span class="k">HAVING</span><span class="w"> </span><span class="nf">YEAR</span><span class="p">(</span><span class="n">si</span><span class="p">.</span><span class="n">InvoiceDate</span><span class="p">)</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="ow">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">)</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">InvoiceYear</span>
+<span class="w">      </span><span class="p">,</span><span class="nf">ISNULL</span><span class="p">(</span><span class="n">InvoiceMonth</span><span class="p">,</span><span class="s1">'Grand Total'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">InvoiceMonth</span>
+<span class="w">      </span><span class="p">,</span><span class="nf">FORMAT</span><span class="p">(</span><span class="n">MonthlyTotal</span><span class="p">,</span><span class="s1">'#,#.00'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">MonthlyTotal</span>
+<span class="w">      </span><span class="p">,</span><span class="nf">FORMAT</span><span class="p">(</span><span class="nf">SUM</span><span class="p">(</span><span class="n">MonthlyTotal</span><span class="p">)</span><span class="w"> </span><span class="k">OVER</span><span class="p">(</span><span class="k">PARTITION</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">InvoiceYear</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="nf">ISNULL</span><span class="p">(</span><span class="n">mn</span><span class="p">,</span><span class="mi">13</span><span class="p">)),</span><span class="s1">'#,#.00'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">CumulativeTotal</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">tbl</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">InvoiceYear</span><span class="p">,</span><span class="nf">ISNULL</span><span class="p">(</span><span class="n">mn</span><span class="p">,</span><span class="mi">13</span><span class="p">)</span>
+</pre></div>
+</section>
+<section class="q" id="q8">
+<span class="q-num">Question 8 · PIVOT</span>
+<h2>Number of orders per month, by year (2013-2016)</h2>
+<div class="code"><div class="code-head"><span>Question 8</span><span>T-SQL</span></div><pre class="hl"><span class="k">SELECT</span><span class="w"> </span><span class="n">OrderMonth</span><span class="p">,</span><span class="w"> </span><span class="o">[</span><span class="n">2013</span><span class="o">]</span><span class="p">,</span><span class="o">[</span><span class="n">2014</span><span class="o">]</span><span class="p">,</span><span class="o">[</span><span class="n">2015</span><span class="o">]</span><span class="p">,</span><span class="o">[</span><span class="n">2016</span><span class="o">]</span>
+<span class="k">FROM</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">OrderID</span><span class="p">,</span><span class="w"> </span><span class="nf">MONTH</span><span class="p">(</span><span class="n">o</span><span class="p">.</span><span class="n">OrderDate</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">OrderMonth</span><span class="w"> </span><span class="p">,</span><span class="nf">YEAR</span><span class="p">(</span><span class="n">o</span><span class="p">.</span><span class="n">OrderDate</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">yy</span>
+<span class="w">      </span><span class="k">FROM</span><span class="w"> </span><span class="n">Sales</span><span class="p">.</span><span class="n">Orders</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="n">T</span>
+<span class="k">PIVOT</span><span class="p">(</span><span class="nf">COUNT</span><span class="p">(</span><span class="n">orderID</span><span class="p">)</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="n">T</span><span class="p">.</span><span class="n">yy</span><span class="w"> </span><span class="ow">IN</span><span class="w"> </span><span class="p">(</span><span class="o">[</span><span class="n">2013</span><span class="o">]</span><span class="p">,</span><span class="o">[</span><span class="n">2014</span><span class="o">]</span><span class="p">,</span><span class="o">[</span><span class="n">2015</span><span class="o">]</span><span class="p">,</span><span class="o">[</span><span class="n">2016</span><span class="o">]</span><span class="p">))</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">pvt</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">OrderMonth</span>
+</pre></div>
+</section>
+<section class="q" id="q9">
+<span class="q-num">Question 9 · LAG, DATEDIFF, windowed AVG and MAX</span>
+<h2>Potential churn: days since last order compared with the customer&#x27;s average gap</h2>
+<div class="code"><div class="code-head"><span>Question 9</span><span>T-SQL</span></div><pre class="hl"><span class="k">WITH</span><span class="w"> </span><span class="n">tbl</span>
+<span class="k">AS</span>
+<span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="n">CustomerID</span><span class="p">,</span><span class="n">c</span><span class="p">.</span><span class="n">CustomerName</span><span class="p">,</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">OrderDate</span>
+<span class="w">      </span><span class="p">,</span><span class="n">LAG</span><span class="p">(</span><span class="n">o</span><span class="p">.</span><span class="n">OrderDate</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="k">OVER</span><span class="p">(</span><span class="k">PARTITION</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="n">CustomerID</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">OrderDate</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">PreviousOrderDate</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">sales</span><span class="p">.</span><span class="n">Orders</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">sales</span><span class="p">.</span><span class="n">Customers</span><span class="w"> </span><span class="n">c</span>
+<span class="k">ON</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">CustomerID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="n">CustomerID</span><span class="p">),</span>
+<span class="n">tbl2</span>
+<span class="k">AS</span>
+<span class="p">(</span><span class="k">SELECT</span><span class="o">*</span>
+<span class="w">      </span><span class="p">,</span><span class="nf">DATEDIFF</span><span class="p">(</span><span class="n">dd</span><span class="p">,</span><span class="n">tbl</span><span class="p">.</span><span class="n">PreviousOrderDate</span><span class="p">,</span><span class="n">tbl</span><span class="p">.</span><span class="n">OrderDate</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">DaysApart</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">tbl</span><span class="p">),</span>
+<span class="n">tbl3</span>
+<span class="k">AS</span>
+<span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">tbl2</span><span class="p">.</span><span class="n">CustomerID</span><span class="p">,</span><span class="n">tbl2</span><span class="p">.</span><span class="n">CustomerName</span><span class="p">,</span><span class="n">tbl2</span><span class="p">.</span><span class="n">OrderDate</span><span class="p">,</span><span class="n">tbl2</span><span class="p">.</span><span class="n">PreviousOrderDate</span>
+<span class="w">      </span><span class="p">,</span><span class="nf">AVG</span><span class="p">(</span><span class="n">tbl2</span><span class="p">.</span><span class="n">DaysApart</span><span class="p">)</span><span class="k">OVER</span><span class="p">(</span><span class="k">PARTITION</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">tbl2</span><span class="p">.</span><span class="n">CustomerID</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">AvgDaysBetweenOrders</span>
+<span class="w">      </span><span class="p">,</span><span class="nf">MAX</span><span class="p">(</span><span class="n">tbl2</span><span class="p">.</span><span class="n">OrderDate</span><span class="p">)</span><span class="k">OVER</span><span class="p">(</span><span class="k">PARTITION</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">tbl2</span><span class="p">.</span><span class="n">CustomerID</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">LastCustOrderDate</span>
+<span class="w">      </span><span class="p">,</span><span class="nf">MAX</span><span class="p">(</span><span class="n">tbl2</span><span class="p">.</span><span class="n">OrderDate</span><span class="p">)</span><span class="k">OVER</span><span class="p">()</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">LastOrderDateAll</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">tbl2</span><span class="p">),</span>
+<span class="n">tbl4</span>
+<span class="k">AS</span>
+<span class="p">(</span><span class="k">SELECT</span><span class="o">*</span>
+<span class="w">     </span><span class="p">,</span><span class="nf">DATEDIFF</span><span class="p">(</span><span class="n">dd</span><span class="p">,</span><span class="n">LastCustOrderDate</span><span class="p">,</span><span class="n">LastOrderDateAll</span><span class="p">)</span><span class="w"> </span><span class="n">DaysSinceLastOrder</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">tbl3</span><span class="p">)</span>
+<span class="k">SELECT</span><span class="o">*</span>
+<span class="w">     </span><span class="p">,</span><span class="k">CASE</span><span class="w"> </span><span class="k">WHEN</span><span class="w"> </span><span class="n">DaysSinceLastOrder</span><span class="o">&gt;</span><span class="p">(</span><span class="n">AvgDaysBetweenOrders</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="s1">'Potential Churn'</span>
+<span class="w">           </span><span class="k">ELSE</span><span class="w"> </span><span class="s1">'Active'</span>
+<span class="w">      </span><span class="k">END</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">CustomerStatus</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">tbl4</span>
+</pre></div>
+</section>
+<section class="q" id="q10">
+<span class="q-num">Question 10 · CASE, COUNT DISTINCT, windowed SUM</span>
+<h2>Customer distribution by category, counting each chain as one customer</h2>
+<div class="code"><div class="code-head"><span>Question 10</span><span>T-SQL</span></div><pre class="hl"><span class="k">WITH</span><span class="w"> </span><span class="n">tbl</span>
+<span class="k">AS</span>
+<span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">cat</span><span class="p">.</span><span class="n">CustomerCategoryName</span><span class="p">,</span><span class="w"> </span><span class="n">cus</span><span class="p">.</span><span class="n">CustomerID</span>
+<span class="w">      </span><span class="p">,</span><span class="k">CASE</span><span class="w"> </span><span class="k">WHEN</span><span class="w"> </span><span class="n">cus</span><span class="p">.</span><span class="n">CustomerName</span><span class="w"> </span><span class="ow">LIKE</span><span class="w"> </span><span class="s1">'Wingtip%'</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="s1">'wingtip'</span>
+<span class="w">            </span><span class="k">WHEN</span><span class="w"> </span><span class="n">CustomerName</span><span class="w"> </span><span class="ow">LIKE</span><span class="w"> </span><span class="s1">'Tailspin%'</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="s1">'tailspin'</span>
+<span class="w">            </span><span class="k">ELSE</span><span class="w">  </span><span class="n">cus</span><span class="p">.</span><span class="n">CustomerName</span>
+<span class="w">      </span><span class="k">END</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">UniC</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">Sales</span><span class="p">.</span><span class="n">CustomerCategories</span><span class="w"> </span><span class="n">cat</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">sales</span><span class="p">.</span><span class="n">Customers</span><span class="w"> </span><span class="n">cus</span>
+<span class="k">ON</span><span class="w"> </span><span class="n">cat</span><span class="p">.</span><span class="n">CustomerCategoryID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cus</span><span class="p">.</span><span class="n">CustomerCategoryID</span><span class="p">),</span>
+<span class="n">tbl2</span>
+<span class="k">AS</span>
+<span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">tbl</span><span class="p">.</span><span class="n">CustomerCategoryName</span>
+<span class="w">     </span><span class="p">,</span><span class="nf">COUNT</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">tbl</span><span class="p">.</span><span class="n">UniC</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">CustomerCOUNT</span>
+<span class="w">     </span><span class="p">,</span><span class="nf">SUM</span><span class="p">(</span><span class="nf">COUNT</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">tbl</span><span class="p">.</span><span class="n">UniC</span><span class="p">))</span><span class="k">OVER</span><span class="p">()</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">TotalCustCount</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">tbl</span>
+<span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">tbl</span><span class="p">.</span><span class="n">CustomerCategoryName</span><span class="p">)</span>
+<span class="k">SELECT</span><span class="o">*</span>
+<span class="w">     </span><span class="p">,</span><span class="nf">CONCAT</span><span class="p">(</span><span class="nf">FORMAT</span><span class="p">((</span><span class="n">tbl2</span><span class="p">.</span><span class="n">CustomerCOUNT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">100.0</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">tbl2</span><span class="p">.</span><span class="n">TotalCustCount</span><span class="p">,</span><span class="s1">'#.00'</span><span class="p">),</span><span class="s1">'%'</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">DistributionFactor</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">tbl2</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">tbl2</span><span class="p">.</span><span class="n">CustomerCategoryName</span>
+</pre></div>
+</section>
+<section class="callout" id="conclusion"><h2>Conclusion: customer concentration risk</h2><p>The highest business risk lies in the Novelty Shop category. This category contains the company&#x27;s two largest customers: Wingtip Toys and Tailspin Toys. Together, they account for 459 branches out of a total of 663 stores across all customer categories (69.23%). When each chain is counted as a single customer, the Novelty Shop category represents 22.43% of all customers across the 5 categories. The company is significantly and heavily dependent on these two customers in the Novelty Shop category. The loss of even one of these chains would cause a drop of tens of percent in the company&#x27;s overall customer base.</p></section>
+  </article>
+</div></div>
+</main>
+<footer class="p-foot band"><div class="wrap"><span>© 2026 Kristin Labsker</span><a href="../index.html#projects">Back to all projects</a></div></footer>
+<script>(function(){var b=document.getElementById('code-toggle');if(!b)return;b.addEventListener('click',function(){var h=document.body.classList.toggle('hide-code');b.textContent=h?'Show code':'Hide code';b.setAttribute('aria-pressed',h)})})();</script>
+</body>
+</html>
