@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Crect width='26' height='26' rx='13' fill='%23E7DDD3'/%3E%3Crect x='6' y='13' width='3.2' height='7' rx='1' fill='%232A2623'/%3E%3Crect x='11.4' y='9' width='3.2' height='11' rx='1' fill='%232A2623'/%3E%3Crect x='16.8' y='5.5' width='3.2' height='14.5' rx='1' fill='%232A2623'/%3E%3C/svg%3E">
+<title>Kristin Labsker Portfolio</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Kristin Labsker, data analyst. SQL, Python and Power BI projects on sales, customers and real-estate data.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..700,0..100,0..1;1,9..144,300..700,0..100,0..1&family=Public+Sans:ital,wght@0,400..700;1,400&display=swap">
+<style>
+/* Layout: soft sage hero with a toolkit ledger, project rows (evergreen chart cover + case text, alternating), about with a dated timeline, skills ledger, evergreen contact band. */
+:root{
+  --pine:#E6ECF0;       /* contact band: mist blue */
+  --pine-2:#E3D8CE;
+  --cover:#EEE7E0;      /* project image ground: warm stone */
+  --moss:#7C2A3F;       /* links: deep wine */
+  --brass:#8C2F47;      /* the one accent: wine */
+  --rose-soft:#F1EBE5;  /* neutral linen wash */
+  --blue:#56708A;       /* second color: dusty slate blue */
+  --blue-soft:#E6ECF0;
+  --mist:#F3EEE8;       /* hero ground: linen */
+  --field:#FBF9F6;      /* page ground: ivory */
+  --surface:#FFFFFF;
+  --ink:#2A2623;        /* warm charcoal */
+  --muted:#76695F;      /* taupe */
+  --line:#E7DFD7;
+  --on-pine:#2A2623;
+  --on-pine-muted:#76695F;
+  --font-display:"Fraunces","Lora",Georgia,"Times New Roman",serif;
+  --font-body:"Public Sans","Segoe UI",system-ui,-apple-system,sans-serif;
+  --step--1:clamp(.82rem,.8rem + .1vw,.88rem);
+  --step-0:clamp(1rem,.97rem + .15vw,1.08rem);
+  --step-1:clamp(1.2rem,1.1rem + .4vw,1.4rem);
+  --step-2:clamp(1.5rem,1.3rem + .9vw,2rem);
+  --step-3:clamp(2.1rem,1.6rem + 2.2vw,3.3rem);
+  --step-4:clamp(2.5rem,1.8rem + 3.4vw,4.6rem);
+  --radius:20px;
+  --wrap:1180px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --pine:#1E252B;--pine-2:#332C28;--blue:#9DB4CA;--blue-soft:#1F262C;--cover:#EEE7E0;--moss:#E3A3B3;--brass:#D98A9E;--rose-soft:#2A2421;
+  --mist:#1F1B19;--field:#181514;--surface:#221D1B;--ink:#EFE9E4;--muted:#B6AAA1;--line:#3A322E;
+  --on-pine:#EFE9E4;--on-pine-muted:#B6AAA1;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --pine:#1E252B;--pine-2:#332C28;--blue:#9DB4CA;--blue-soft:#1F262C;--cover:#EEE7E0;--moss:#E3A3B3;--brass:#D98A9E;--rose-soft:#2A2421;
+  --mist:#1F1B19;--field:#181514;--surface:#221D1B;--ink:#EFE9E4;--muted:#B6AAA1;--line:#3A322E;
+  --on-pine:#EFE9E4;--on-pine-muted:#B6AAA1;color-scheme:dark}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--field);color:var(--ink);font-family:var(--font-body);font-size:var(--step-0);line-height:1.65;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--mist)}
+img,svg{max-width:100%;display:block}
+a{color:var(--moss);text-underline-offset:.22em;text-decoration-thickness:1px}
+a:hover{text-decoration-thickness:2px;color:var(--brass)}
+:focus-visible{outline:2px solid var(--brass);outline-offset:3px;border-radius:4px}
+h1,h2,h3{font-family:var(--font-display);font-optical-sizing:auto;font-variation-settings:"SOFT" 100,"WONK" 0;line-height:1.1;text-wrap:balance;margin:0;font-weight:500;letter-spacing:-.015em}
+p{margin:0}
+.band{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:var(--wrap);margin-inline:auto}
+.skip{position:absolute;left:-999px;top:8px;background:var(--surface);color:var(--ink);padding:8px 12px;z-index:20}
+.skip:focus{left:16px}
+
+/* nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:color-mix(in srgb,var(--mist) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid color-mix(in srgb,var(--ink) 8%,transparent)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:14px}
+.brand{font-family:var(--font-display);font-variation-settings:"SOFT" 100;font-weight:600;font-size:1.15rem;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:10px}
+.brand-mark{width:28px;height:28px;flex:none}
+.nav ul{list-style:none;display:flex;gap:clamp(12px,2.4vw,30px);margin:0;padding:0;font-size:var(--step--1)}
+.nav a{color:var(--muted);text-decoration:none}
+.nav a:hover{color:var(--ink)}
+@media (max-width:640px){.nav .hide-sm{display:none}}
+
+/* hero */
+.hero{background:var(--mist);color:var(--ink)}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:clamp(32px,6vw,88px);align-items:end;padding-block:clamp(56px,9vw,116px) clamp(48px,7vw,88px)}
+.hero-kicker{color:var(--muted);font-size:var(--step--1);margin-bottom:22px;display:flex;align-items:center;gap:10px}
+.hero-kicker::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--blue)}
+.hero h1{font-size:var(--step-4);font-weight:400;letter-spacing:-.025em;max-width:15ch;line-height:1.04}
+.hero h1 em{font-style:normal;color:var(--moss)}
+.hero-lede{margin-top:26px;max-width:54ch;color:var(--muted);font-size:var(--step-1);line-height:1.55}
+.hero-actions{margin-top:34px;display:flex;flex-wrap:wrap;gap:12px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:999px;font-weight:600;font-size:.95rem;text-decoration:none;border:1px solid transparent;transition:background-color .2s,border-color .2s,color .2s}
+.btn-primary{background:var(--brass);color:#FFFFFF}
+.btn-primary:hover{background:color-mix(in srgb,var(--brass) 86%,#000);color:#FFFFFF}
+.btn-ghost{color:var(--ink);border-color:color-mix(in srgb,var(--ink) 25%,transparent)}
+.btn-ghost:hover{border-color:var(--ink);color:var(--ink)}
+.contact .btn-ghost{color:var(--on-pine);border-color:color-mix(in srgb,var(--on-pine) 30%,transparent)}
+.contact .btn-ghost:hover{border-color:var(--on-pine);color:var(--on-pine)}
+
+/* toolkit ledger in hero */
+.ledger{margin:0;background:color-mix(in srgb,var(--surface) 70%,transparent);border:1px solid color-mix(in srgb,var(--ink) 8%,transparent);border-radius:var(--radius);padding:6px 22px}
+.ledger-row{display:grid;grid-template-columns:5.5rem minmax(0,1fr);gap:16px;padding-block:15px;border-bottom:1px solid color-mix(in srgb,var(--ink) 9%,transparent)}
+.ledger-row:last-child{border-bottom:0}
+.ledger-row dt{font-family:var(--font-display);font-variation-settings:"SOFT" 100;font-weight:600;color:var(--ink)}
+.ledger-row dd{margin:0;color:var(--muted);font-size:var(--step--1);line-height:1.5}
+.ledger-note{margin-top:14px;font-size:var(--step--1);color:var(--muted);padding-left:22px}
+
+/* sections */
+.section{padding-block:clamp(64px,9vw,120px)}
+.section-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:clamp(20px,5vw,64px);align-items:end;margin-bottom:clamp(40px,6vw,72px)}
+.section-head h2{font-size:var(--step-3);font-weight:400;letter-spacing:-.02em}
+.section-head p{color:var(--muted);max-width:56ch}
+
+/* projects */
+.projects{display:grid;gap:clamp(56px,8vw,104px)}
+.project{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,1fr);gap:clamp(28px,5vw,64px);align-items:start}
+.project:nth-child(even) .cover{order:2}
+.cover{position:sticky;top:calc(env(safe-area-inset-top,0px) + 88px);border-radius:var(--radius);overflow:hidden;background:var(--cover);box-shadow:0 1px 2px color-mix(in srgb,#2A2623 6%,transparent),0 30px 60px -36px color-mix(in srgb,#5A4A40 45%,transparent);position:relative}
+.cover{display:block;text-decoration:none;transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s}
+.cover-cta{position:absolute;right:16px;bottom:16px;padding:8px 14px;border-radius:999px;background:var(--ink);color:var(--field);font-size:.82rem;font-weight:600;opacity:0;transform:translateY(6px);transition:opacity .25s,transform .25s}
+.cover:hover .cover-cta,.cover:focus-visible .cover-cta{opacity:1;transform:none}
+@media (hover:hover){.cover:hover{transform:translateY(-4px)}}
+@media (hover:none){.cover-cta{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.cover,.cover-cta{transition:none}.cover:hover{transform:none}}
+.cover svg{width:100%;height:auto}
+.cover text{font-family:var(--font-body)}
+.cover .t-display{font-family:var(--font-display);font-variation-settings:"SOFT" 100;font-weight:500;letter-spacing:-.01em}
+.project-body{min-width:0;display:grid;gap:20px}
+.project-meta{display:flex;flex-wrap:wrap;gap:8px}
+.tag{font-size:.78rem;font-weight:600;padding:4px 11px;border-radius:999px;background:var(--blue-soft);color:var(--blue)}
+.tag-main{background:var(--ink);color:var(--field)}
+.project h3{font-size:var(--step-2);font-weight:500}
+.question{font-size:var(--step-1);line-height:1.45;color:var(--ink);padding:4px 0 4px 18px;border-left:2px solid var(--brass);font-family:var(--font-display);font-variation-settings:"SOFT" 100;font-style:italic;font-weight:400}
+.project-body>p{color:var(--muted);max-width:60ch}
+.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.fact{background:var(--surface);padding:14px 16px;display:grid;gap:2px;align-content:start}
+.fact b{font-family:var(--font-display);font-variation-settings:"SOFT" 100;font-size:var(--step-2);font-weight:500;color:var(--brass);font-variant-numeric:tabular-nums;line-height:1.1}
+.fact span{font-size:.8rem;color:var(--muted);line-height:1.4}
+.findings{margin:0;padding:0;list-style:none;display:grid;gap:10px}
+.findings li{display:grid;grid-template-columns:14px minmax(0,1fr);gap:10px;font-size:.96rem;line-height:1.55}
+.findings li::before{content:"";width:6px;height:6px;margin-top:.62em;border-radius:50%;background:var(--brass)}
+.links{display:flex;flex-wrap:wrap;gap:10px 22px;padding-top:4px}
+.links a{font-weight:600;font-size:.95rem}
+details.more{border-top:1px solid var(--line);padding-top:14px}
+details.more summary{cursor:pointer;font-weight:600;color:var(--ink);font-size:.95rem}
+details.more summary::marker{color:var(--brass)}
+details.more ol{margin:14px 0 0;padding-left:1.3em;display:grid;gap:8px;color:var(--muted);font-size:.94rem}
+details.more ol b{color:var(--ink);font-weight:600}
+
+/* about */
+.about{background:var(--surface);border-block:1px solid var(--line)}
+.about-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:clamp(32px,6vw,88px)}
+.about-story{display:grid;gap:18px;align-content:start}
+.about-story h2{font-size:var(--step-3);font-weight:400;letter-spacing:-.02em}
+.about-story p{color:var(--muted);max-width:52ch}
+.about-story p.lead{color:var(--ink);font-size:var(--step-1);line-height:1.5}
+.timeline{list-style:none;margin:0;padding:0;display:grid}
+.timeline li{display:grid;grid-template-columns:7.5rem minmax(0,1fr);gap:20px;padding-block:22px;border-top:1px solid var(--line)}
+.timeline li:last-child{border-bottom:1px solid var(--line)}
+.when{font-variant-numeric:tabular-nums;color:var(--muted);font-size:var(--step--1);padding-top:3px}
+.timeline h3{font-size:var(--step-1);font-weight:500}
+.org{color:var(--muted);font-size:var(--step--1);margin-top:2px}
+.timeline p{margin-top:8px;font-size:.95rem}
+.langs{margin-top:22px;font-size:var(--step--1);color:var(--muted)}
+
+/* skills */
+.skills{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(20px,3vw,40px)}
+.skill{border-top:2px solid var(--blue);padding-top:16px;min-width:0}
+.skill h3{font-size:var(--step-1);margin-bottom:12px;font-weight:500}
+.skill ul{list-style:none;margin:0;padding:0;display:grid;gap:7px;color:var(--muted);font-size:.95rem;line-height:1.45}
+
+/* contact */
+.contact{background:var(--pine);color:var(--on-pine);border-radius:32px 32px 0 0}
+.contact .btn-ghost{background:color-mix(in srgb,var(--surface) 55%,transparent)}
+.contact .wrap{padding-block:clamp(64px,9vw,112px) 40px;display:grid;gap:40px}
+.contact h2{font-size:var(--step-3);letter-spacing:-.02em;max-width:18ch;font-weight:400}
+.contact-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.email{font-family:var(--font-display);font-variation-settings:"SOFT" 100;font-size:var(--step-2);color:var(--on-pine);user-select:all;word-break:break-all}
+.copy{font:inherit;font-size:.85rem;font-weight:600;cursor:pointer;background:transparent;color:var(--on-pine);border:1px solid color-mix(in srgb,var(--on-pine) 30%,transparent);border-radius:999px;padding:7px 14px}
+.copy:hover{border-color:var(--on-pine)}
+.foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;padding-top:24px;border-top:1px solid color-mix(in srgb,var(--on-pine) 14%,transparent);font-size:var(--step--1);color:var(--on-pine-muted)}
+.foot a{color:var(--on-pine)}
+
+/* responsive */
+@media (max-width:900px){
+  .hero .wrap,.section-head,.project,.about-grid{grid-template-columns:minmax(0,1fr)}
+  .project:nth-child(even) .cover{order:0}
+  .cover{position:relative;top:0}
+  .skills{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:520px){
+  .facts{grid-template-columns:minmax(0,1fr)}
+  .skills{grid-template-columns:minmax(0,1fr)}
+  .timeline li{grid-template-columns:minmax(0,1fr);gap:6px}
+}
+
+/* one orchestrated load moment: hero lines rise in; the page is complete at rest without it */
+@media (prefers-reduced-motion:no-preference){
+  .hero .rise{animation:rise .8s cubic-bezier(.2,.7,.2,1) both}
+  .hero .rise:nth-child(2){animation-delay:.08s}
+  .hero .rise:nth-child(3){animation-delay:.16s}
+  .hero .rise:nth-child(4){animation-delay:.24s}
+  .cover .bar{transform-origin:left center;animation:grow 1s cubic-bezier(.2,.7,.2,1) both}
+  @keyframes rise{from{opacity:.001;transform:translateY(14px)}to{opacity:1;transform:none}}
+  @keyframes grow{from{transform:scaleX(.04)}to{transform:none}}
+}
+</style>
+</head>
+<body>
+
+
+<a class="skip" href="#projects">Skip to projects</a>
+
+<header class="nav band">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Kristin Labsker, back to top">
+      <svg class="brand-mark" viewBox="0 0 26 26" aria-hidden="true"><rect width="26" height="26" rx="13" fill="#E7DDD3"/><rect x="6" y="13" width="3.2" height="7" rx="1" fill="#2A2623"/><rect x="11.4" y="9" width="3.2" height="11" rx="1" fill="#2A2623"/><rect x="16.8" y="5.5" width="3.2" height="14.5" rx="1" fill="#2A2623"/></svg>
+      Kristin Labsker
+    </a>
+    <nav aria-label="Main">
+      <ul>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#about">About</a></li>
+        <li class="hide-sm"><a href="#skills">Skills</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+<section class="hero band" aria-labelledby="hero-title">
+  <div class="wrap">
+    <div>
+      <p class="hero-kicker rise">Data analyst in Rishon LeZion, Israel</p>
+      <h1 id="hero-title" class="rise">I turn sales, property and customer data into clear decisions.</h1>
+      <p class="hero-lede rise">Six years of running sales teams and management reports in real estate and finance taught me which numbers move a business. Now I find them with SQL, Python and Power BI, and explain them in plain language to the people who decide.</p>
+      <div class="hero-actions rise">
+        <a class="btn btn-primary" href="#projects">See my projects</a>
+        <a class="btn btn-ghost" href="https://github.com/Kristin-labsker" target="_blank" rel="noopener">GitHub profile</a>
+      </div>
+    </div>
+    <div>
+      <dl class="ledger" aria-label="Toolkit">
+        <div class="ledger-row"><dt>SQL</dt><dd>T-SQL, CTEs, window functions, ROLLUP, PIVOT on a multi-schema wholesale database</dd></div>
+        <div class="ledger-row"><dt>Python</dt><dd>pandas cleaning and EDA, correlation analysis, matplotlib and seaborn charts</dd></div>
+        <div class="ledger-row"><dt>Power BI</dt><dd>Star schema, DAX, drill-down, bookmarks, forecasting, report design</dd></div>
+        <div class="ledger-row"><dt>Excel</dt><dd>KPI reports, data cleansing and cross-checks, CRM exports</dd></div>
+      </dl>
+      <p class="ledger-note">Data Analyst program, John Bryce, 2026</p>
+    </div>
+  </div>
+</section>
+
+<section class="section band" id="projects" aria-labelledby="projects-title">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="projects-title">Selected projects</h2>
+      <p>Three end-to-end projects. Each one starts with a business question, works through the data cleaning and analysis, and ends with findings a manager can act on. The full code and files are on GitHub.</p>
+    </div>
+
+    <div class="projects">
+
+      <!-- POWER BI -->
+      <article class="project" aria-labelledby="p-pbi">
+        <a class="cover" href="https://github.com/Kristin-labsker/data-analyst-projects/tree/main/power-bi-cascadia-estates" target="_blank" rel="noopener" aria-label="Open the Cascadia Estates Power BI project on GitHub">
+          <svg viewBox="0 0 800 520" role="img" aria-labelledby="pbi-cap">
+            <title id="pbi-cap">Illustration of the Cascadia Estates report: page tabs, KPI cards, a weekly sales line with a dashed forecast, and a weekday by week heatmap.</title>
+            <rect width="800" height="520" fill="#EEE7E0"/>
+            <rect x="40" y="40" width="720" height="440" rx="14" fill="#F8F4F0" stroke="#E4DAD0"/>
+            <rect x="40" y="40" width="720" height="54" rx="12" fill="#FFFFFF"/>
+            <rect x="40" y="80" width="720" height="14" fill="#FFFFFF"/>
+            <text x="64" y="73" fill="#2A2623" class="t-display" font-size="22">Cascadia Estates</text>
+            <text x="736" y="73" fill="#8C2F47" font-size="15" text-anchor="end">King County housing market</text>
+            <g font-size="14" fill="#8A7B70">
+              <rect x="56" y="105" width="98" height="28" rx="14" fill="#8C2F47"/><text x="105" y="124" text-anchor="middle" fill="#FFFFFF" font-weight="600">Market</text>
+              <text x="198" y="124" text-anchor="middle">Location</text>
+              <text x="282" y="124" text-anchor="middle">Drivers</text>
+              <text x="358" y="124" text-anchor="middle">Time</text>
+              <text x="440" y="124" text-anchor="middle">Price</text>
+              <text x="530" y="124" text-anchor="middle">Process</text>
+            </g>
+            <g>
+              <rect x="56" y="148" width="160" height="72" rx="8" fill="#FFFFFF"/>
+              <rect x="228" y="148" width="160" height="72" rx="8" fill="#FFFFFF"/>
+              <rect x="400" y="148" width="160" height="72" rx="8" fill="#FFFFFF"/>
+              <rect x="572" y="148" width="172" height="72" rx="8" fill="#FFFFFF"/>
+              <g fill="#8A7B70" font-size="13"><text x="72" y="172">Homes sold</text><text x="244" y="172">Median price</text><text x="416" y="172">Price per sq ft</text><text x="588" y="172">Waterfront premium</text></g>
+              <g fill="#DCCFC3"><rect x="72" y="184" width="74" height="18" rx="4" opacity=".9"/><rect x="244" y="184" width="88" height="18" rx="4" opacity=".9"/><rect x="416" y="184" width="60" height="18" rx="4" opacity=".9"/><rect x="588" y="184" width="70" height="18" rx="4" fill="#8C2F47"/></g>
+            </g>
+            <rect x="56" y="236" width="400" height="228" rx="8" fill="#FFFFFF"/>
+            <text x="72" y="262" fill="#2A2623" font-size="15" font-weight="600">Weekly sales with 4-week forecast</text>
+            <g stroke="#E2D6CB" stroke-width="1"><line x1="72" y1="300" x2="440" y2="300"/><line x1="72" y1="350" x2="440" y2="350"/><line x1="72" y1="400" x2="440" y2="400"/><line x1="72" y1="448" x2="440" y2="448"/></g>
+            <polyline fill="none" stroke="#56708A" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" points="80,392 112,372 144,380 176,350 208,358 240,330 272,342 304,300 336,398"/>
+            <polyline fill="none" stroke="#8C2F47" stroke-width="3" stroke-dasharray="7 6" stroke-linecap="round" points="336,398 362,330 388,322 414,314 436,306"/>
+            <circle cx="304" cy="300" r="5" fill="#2A2623"/>
+            <rect x="472" y="236" width="272" height="228" rx="8" fill="#FFFFFF"/>
+            <text x="488" y="262" fill="#2A2623" font-size="15" font-weight="600">Sales calendar</text>
+            <g id="heat"></g>
+          </svg>
+        <span class="cover-cta" aria-hidden="true">Open on GitHub</span></a>
+        <div class="project-body">
+          <div class="project-meta"><span class="tag tag-main">Power BI</span><span class="tag">DAX</span><span class="tag">Data modeling</span><span class="tag">Report design</span></div>
+          <h3 id="p-pbi">Cascadia Estates: King County housing market report</h3>
+          <p class="question">Where, when and what kind of homes sell in King County, and which deals fall outside the normal price range?</p>
+          <p>A seven-page interactive report built for the owner of a real-estate brokerage. It covers about 4,600 home sales from May to July 2014 and lets the owner move from a market overview down to single cities, property features and unusual deals.</p>
+          <ul class="findings">
+            <li>Star schema with a Sales fact table and Date and Location dimensions, plus a Region to City drill-down hierarchy.</li>
+            <li>Advanced DAX: IQR outlier detection, TOPN rankings, an SVG sales-calendar heatmap and a linear-trend forecast four weeks ahead.</li>
+            <li>Bookmark tabs that switch the price view between all homes, standard deals and outliers, a custom tooltip page, and cross-filtering between visuals.</li>
+            <li>A Process Notes page that documents the data, cleaning, model and every design decision.</li>
+          </ul>
+          <details class="more">
+            <summary>Report pages</summary>
+            <ol>
+              <li><b>About the Project.</b> Topic and research questions.</li>
+              <li><b>Market Overview.</b> KPIs, homes by region with drill-down, weekly trend and forecast, price bands.</li>
+              <li><b>Location &amp; Price.</b> City scatter on a log scale against the county median, top 10 cities.</li>
+              <li><b>Property Drivers.</b> Waterfront, view and renovation premiums, size bands and bedrooms.</li>
+              <li><b>Time &amp; Activity.</b> Weekday by week heatmap, busiest weekdays, daily sales pace by month.</li>
+              <li><b>Price Landscape.</b> Price distribution with tabs for standard deals and outliers by city.</li>
+              <li><b>Process Notes.</b> Data, cleaning, model, analysis and key conclusions.</li>
+            </ol>
+          </details>
+          <div class="links">
+            <a href="https://github.com/Kristin-labsker/data-analyst-projects/tree/main/power-bi-cascadia-estates" target="_blank" rel="noopener">Project files on GitHub</a>
+            <a href="https://github.com/Kristin-labsker/data-analyst-projects/raw/main/power-bi-cascadia-estates/Cascadia_Estates.pbix" target="_blank" rel="noopener">Download the .pbix report</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- PYTHON -->
+      <article class="project" aria-labelledby="p-py">
+        <a class="cover" href="https://github.com/Kristin-labsker/data-analyst-projects/blob/main/python-king-county-house-sales/Washington_House_Sales.ipynb" target="_blank" rel="noopener" aria-label="Open the King County Python notebook on GitHub">
+          <svg viewBox="0 0 800 520" role="img" aria-labelledby="py-cap">
+            <title id="py-cap">Bar chart of each home feature's correlation with sale price. Living area is highest at 0.70; lot size, condition and year built are near zero.</title>
+            <rect width="800" height="520" fill="#EEE7E0"/>
+            <text x="48" y="64" fill="#8C2F47" font-size="17" font-weight="600">What drives home prices?</text>
+            <text x="48" y="100" fill="#2A2623" class="t-display" font-size="30">Correlation with sale price</text>
+            <g id="corr" transform="translate(0,130)"></g>
+            <text x="48" y="496" fill="#8A7B70" font-size="14">King County, WA. 4,545 sales after cleaning, May to July 2014. Pearson r.</text>
+          </svg>
+        <span class="cover-cta" aria-hidden="true">Open on GitHub</span></a>
+        <div class="project-body">
+          <div class="project-meta"><span class="tag tag-main">Python</span><span class="tag">pandas</span><span class="tag">matplotlib</span><span class="tag">seaborn</span></div>
+          <h3 id="p-py">What drives home prices in King County?</h3>
+          <p class="question">Which physical and location features are most strongly related to home prices?</p>
+          <p>Exploratory analysis of 4,600 home sales and 18 columns in a Jupyter notebook. Every cleaning decision is explained, and each chart ends with a written conclusion.</p>
+          <div class="facts">
+            <div class="fact"><b>0.70</b><span>correlation between living area and price, the strongest single factor</span></div>
+            <div class="fact"><b>4.3×</b><span>Medina's median price compared with Seattle's</span></div>
+            <div class="fact"><b>34%</b><span>of all sales are in Seattle, yet it ranks 18th of 44 cities on median price</span></div>
+          </div>
+          <ul class="findings">
+            <li>Cleaned the data with documented rules: removed 55 rows (1.2%) with $0 prices or extreme values, and fixed rows where build and renovation years were swapped instead of deleting them.</li>
+            <li>Showed that size alone does not explain the price gap between cities. Living area relates to price almost equally in Seattle (0.75) and elsewhere (0.73), so location adds a premium on top.</li>
+            <li>Found that busier weeks had lower median prices (r = −0.75 over 9 full weeks), most likely because more lower-priced homes sold in those weeks.</li>
+            <li>Turned the results into practical advice for buyers, sellers and agents.</li>
+          </ul>
+          <div class="links">
+            <a href="https://github.com/Kristin-labsker/data-analyst-projects/blob/main/python-king-county-house-sales/Washington_House_Sales.ipynb" target="_blank" rel="noopener">View the notebook on GitHub</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- SQL -->
+      <article class="project" aria-labelledby="p-sql">
+        <a class="cover" href="https://github.com/Kristin-labsker/data-analyst-projects/blob/main/sql-wide-world-importers/WideWorldImporters_Analysis.sql" target="_blank" rel="noopener" aria-label="Open the Wide World Importers SQL script on GitHub">
+          <svg viewBox="0 0 800 520" role="img" aria-labelledby="sql-cap">
+            <title id="sql-cap">Stacked bar: 459 of 663 Novelty Shop stores, 69 percent, belong to two chains, Wingtip Toys and Tailspin Toys.</title>
+            <rect width="800" height="520" fill="#EEE7E0"/>
+            <g font-family="ui-monospace,Menlo,Consolas,monospace" font-size="17" fill="#B3A396">
+              <text x="48" y="64">WITH tbl AS (</text>
+              <text x="48" y="90">  SELECT cat.CustomerCategoryName,</text>
+              <text x="48" y="116">    CASE WHEN cus.CustomerName LIKE 'Wingtip%'</text>
+              <text x="48" y="142">         THEN 'wingtip' ...</text>
+            </g>
+            <text x="48" y="212" fill="#8C2F47" font-size="18" font-weight="600">Customer concentration risk</text>
+            <text x="44" y="290" fill="#2A2623" class="t-display" font-size="88">69%</text>
+            <text x="48" y="326" fill="#8A7B70" font-size="19">of Novelty Shop stores belong to just two chains</text>
+            <g transform="translate(48,356)">
+              <rect class="bar" width="704" height="52" rx="6" fill="#D3DDE6"/>
+              <rect class="bar" width="487" height="52" rx="6" fill="#8C2F47"/>
+              <rect x="481" width="6" height="52" fill="#8C2F47"/>
+              <text x="16" y="32" fill="#FFFFFF" font-size="17" font-weight="600">Wingtip Toys + Tailspin Toys: 459 stores</text>
+              <text x="688" y="32" fill="#2A2623" font-size="17" text-anchor="end">Others: 204</text>
+            </g>
+            <text x="48" y="458" fill="#8A7B70" font-size="15">Of 663 stores in total. WideWorldImporters database, T-SQL.</text>
+          </svg>
+        <span class="cover-cta" aria-hidden="true">Open on GitHub</span></a>
+        <div class="project-body">
+          <div class="project-meta"><span class="tag tag-main">SQL</span><span class="tag">T-SQL</span><span class="tag">Window functions</span><span class="tag">SQL Server</span></div>
+          <h3 id="p-sql">Wide World Importers: revenue, customers and churn risk</h3>
+          <p class="question">How is the business growing, who are the customers that matter most, and where is the risk?</p>
+          <p>Ten business questions answered with T-SQL on Microsoft's WideWorldImporters database, a wholesale company with sales, purchasing and warehouse tables.</p>
+          <ul class="findings">
+            <li>Measured yearly revenue growth with an annualized run rate, so partial years compare fairly (CTEs and LAG).</li>
+            <li>Flagged potential churn: customers whose time since their last order is more than twice their usual gap between orders.</li>
+            <li>Ranked the top customers per quarter and the top products by revenue (DENSE_RANK, TOP).</li>
+            <li>Found the main business risk: two chains, Wingtip Toys and Tailspin Toys, hold 459 of 663 stores (69%). Losing either one would cut the customer base by tens of percent.</li>
+          </ul>
+          <details class="more">
+            <summary>All 10 questions</summary>
+            <ol>
+              <li><b>Yearly growth.</b> Revenue per year, annualized, with growth rate.</li>
+              <li><b>Top customers.</b> Five highest-revenue customers in every quarter.</li>
+              <li><b>Best-selling products.</b> Top 10 items by total sales value.</li>
+              <li><b>Product margin.</b> Ranking items by retail price minus unit price.</li>
+              <li><b>Supplier catalog.</b> Each supplier with its product list (STRING_AGG).</li>
+              <li><b>Top customers by geography.</b> City, country, continent and region.</li>
+              <li><b>Monthly sales.</b> Monthly totals, yearly subtotals and running totals (ROLLUP).</li>
+              <li><b>Order seasonality.</b> Orders per month across 2013 to 2016 (PIVOT).</li>
+              <li><b>Churn risk.</b> Days between orders against days since the last order.</li>
+              <li><b>Customer concentration.</b> Customer share per category, counting each chain once.</li>
+            </ol>
+          </details>
+          <div class="links">
+            <a href="https://github.com/Kristin-labsker/data-analyst-projects/blob/main/sql-wide-world-importers/WideWorldImporters_Analysis.sql" target="_blank" rel="noopener">View the SQL script on GitHub</a>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<section class="section about band" id="about" aria-labelledby="about-title">
+  <div class="wrap about-grid">
+    <div class="about-story">
+      <h2 id="about-title">About me</h2>
+      <p class="lead">I came to data from the business side. For six years I managed sales teams and the reports that kept them on target.</p>
+      <p>At a real-estate group I built the management reports: leads, lead sources, conversion rates and KPIs by employee, team and project. Before that I set up and led a ten-person sales team, where I tracked daily performance in Excel and used the numbers to coach people.</p>
+      <p>That work showed me how much a clear number helps a manager decide. I trained as a data analyst to do it properly, with SQL, Python and Power BI. I bring the analysis and the business sense to know which findings matter.</p>
+      <p class="langs">Hebrew and Russian, native. English, very good.</p>
+    </div>
+    <ol class="timeline" aria-label="Experience and education">
+      <li>
+        <span class="when">2026</span>
+        <div><h3>Data Analyst program</h3><p class="org">John Bryce College, 275 academic hours</p><p>Advanced SQL and T-SQL programming, Excel for data processing, Python, Power BI, AI and automation.</p></div>
+      </li>
+      <li>
+        <span class="when">2024 – 2026</span>
+        <div><h3>Control &amp; Administration Manager</h3><p class="org">Alram Real Estate Group</p><p>Built management reports and controls for two group companies. Analyzed leads, conversion rates and KPIs; maintained CRM data quality and cross-checked data between companies.</p></div>
+      </li>
+      <li>
+        <span class="when">2020 – 2023</span>
+        <div><h3>Sales Team Manager</h3><p class="org">Electra Target, for Isracard</p><p>Built a ten-person sales team from scratch and tracked its KPIs daily, weekly and monthly. Led a customer-retention pilot that reached 200% of its expected result.</p></div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<section class="section band" id="skills" aria-labelledby="skills-title">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 id="skills-title">Skills</h2>
+      <p>The tools I use for each step: getting the data, cleaning it, analyzing it and presenting it.</p>
+    </div>
+    <div class="skills">
+      <div class="skill"><h3>SQL</h3><ul><li>T-SQL on SQL Server</li><li>Joins across many tables</li><li>CTEs and subqueries</li><li>Window functions: LAG, DENSE_RANK, running totals</li><li>ROLLUP, PIVOT, STRING_AGG</li><li>Basic DDL and XML</li></ul></div>
+      <div class="skill"><h3>Python</h3><ul><li>pandas for cleaning, filtering and grouping</li><li>Exploratory data analysis</li><li>Correlation analysis</li><li>matplotlib and seaborn charts</li><li>Jupyter notebooks</li></ul></div>
+      <div class="skill"><h3>Power BI</h3><ul><li>Power Query cleaning</li><li>Star-schema data models</li><li>DAX measures and time intelligence</li><li>Hierarchies, drill-down, bookmarks</li><li>Report and dashboard design</li></ul></div>
+      <div class="skill"><h3>Business</h3><ul><li>Advanced Excel</li><li>KPI design and performance reports</li><li>Fireberry CRM and data quality</li><li>Presenting findings to management</li><li>Team leadership</li></ul></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="contact band" id="contact" aria-labelledby="contact-title">
+  <div class="wrap">
+    <h2 id="contact-title">Looking for a data analyst who knows the business side?</h2>
+    <div class="contact-row">
+      <span class="email" id="email">kristin210400@gmail.com</span>
+      <button class="copy" id="copy-email" type="button">Copy email</button>
+    </div>
+    <div class="contact-row">
+      <a class="btn btn-ghost" href="https://github.com/Kristin-labsker" target="_blank" rel="noopener">GitHub</a>
+      <!-- LinkedIn: remove the hidden attribute and add the profile URL once it exists -->
+      <a class="btn btn-ghost" id="linkedin-btn" href="https://www.linkedin.com/in/kristin-labsker" target="_blank" rel="noopener" hidden>LinkedIn</a>
+    </div>
+    <div class="foot">
+      <span>© 2026 Kristin Labsker</span>
+      <a href="#top">Back to top</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var NS="http://www.w3.org/2000/svg";
+  function el(tag,attrs,text){var e=document.createElementNS(NS,tag);for(var k in attrs)e.setAttribute(k,attrs[k]);if(text!=null)e.textContent=text;return e}
+
+  // Correlation with price, from the notebook's heatmap (Pearson r).
+  var corr=[["Living area",.70],["Above-ground area",.59],["Bathrooms",.52],["View",.38],["Bedrooms",.33],["Basement area",.33],["Floors",.25],["Waterfront",.23],["Lot size",.07],["Condition",.05],["Year built",.01]];
+  var g=document.getElementById("corr");
+  if(g){
+    var x0=210,w=680,rowH=30;           // scale: r=1 -> 680px, axis to 0.75
+    [0,.25,.5,.75].forEach(function(t){
+      g.appendChild(el("line",{x1:x0+t*w,x2:x0+t*w,y1:-6,y2:corr.length*rowH-6,stroke:"#E0D6CC","stroke-width":1}));
+      g.appendChild(el("text",{x:x0+t*w,y:corr.length*rowH+12,fill:"#A69689","font-size":13,"text-anchor":"middle"},t.toFixed(2)));
+    });
+    corr.forEach(function(d,i){
+      var y=i*rowH, top=i===0;
+      g.appendChild(el("text",{x:x0-14,y:y+15,fill:top?"#2A2623":"#76695F","font-size":16,"text-anchor":"end","font-weight":top?600:400},d[0]));
+      g.appendChild(el("rect",{class:"bar",x:x0,y:y+1,width:Math.max(d[1]*w,3),height:21,rx:3,fill:top?"#8C2F47":(d[1]>=.3?"#7F97AE":"#E0D4C8")}));
+      g.appendChild(el("text",{x:x0+Math.max(d[1]*w,3)+8,y:y+15,fill:top?"#2A2623":"#8A7B70","font-size":15},d[1].toFixed(2)));
+    });
+  }
+
+  // Heatmap motif for the Power BI cover: 7 weekdays x 10 weeks, illustrative shading only.
+  var h=document.getElementById("heat");
+  if(h){
+    var shades=["#EEF1F4","#D3DDE6","#AFC0D0","#8AA2B9","#8C2F47"];
+    var days=["M","T","W","T","F","S","S"];
+    for(var r=0;r<7;r++){
+      h.appendChild(el("text",{x:494,y:290+r*24,fill:"#A69689","font-size":10,"text-anchor":"middle"},days[r]));
+      for(var c=0;c<10;c++){
+        var v=(r<5?2:0)+((c*7+r*3)%5===0?1:0)+((r===0||r===1)&&c===8?2:0)-(c===9?1:0)-(r===6?0:0);
+        v=Math.max(0,Math.min(4,v+((c+r)%3===0?1:0)));
+        h.appendChild(el("rect",{x:506+c*23,y:278+r*24,width:19,height:19,rx:3,fill:shades[v]}));
+      }
+    }
+  }
+
+  var btn=document.getElementById("copy-email"),em=document.getElementById("email");
+  if(btn&&em){btn.addEventListener("click",function(){
+    var t=em.textContent.trim();
+    function selectIt(){var r=document.createRange();r.selectNodeContents(em);var s=getSelection();s.removeAllRanges();s.addRange(r);btn.textContent="Press Ctrl+C to copy"}
+    try{navigator.clipboard.writeText(t).then(function(){btn.textContent="Email copied"},selectIt)}catch(e){selectIt()}
+  })}
+})();
+</script>
+
+</body>
+</html>
