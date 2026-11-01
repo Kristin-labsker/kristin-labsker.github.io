@@ -106,41 +106,27 @@ p{margin:0}
 .section-head h2{font-size:var(--step-3);font-weight:400;letter-spacing:-.02em}
 .section-head p{color:var(--muted);max-width:56ch}
 
-/* projects */
-.projects{display:grid;gap:clamp(56px,8vw,104px)}
-.project{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,1fr);gap:clamp(28px,5vw,64px);align-items:start}
-.project:nth-child(even) .cover{order:2}
-.cover{position:sticky;top:calc(env(safe-area-inset-top,0px) + 88px);border-radius:var(--radius);overflow:hidden;background:var(--cover);box-shadow:0 1px 2px color-mix(in srgb,#2A2623 6%,transparent),0 30px 60px -36px color-mix(in srgb,#5A4A40 45%,transparent);position:relative}
-.cover{display:block;text-decoration:none;transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s}
-.cover-cta{position:absolute;right:16px;bottom:16px;padding:8px 14px;border-radius:999px;background:var(--ink);color:var(--field);font-size:.82rem;font-weight:600;opacity:0;transform:translateY(6px);transition:opacity .25s,transform .25s}
-.cover:hover .cover-cta,.cover:focus-visible .cover-cta{opacity:1;transform:none}
-@media (hover:hover){.cover:hover{transform:translateY(-4px)}}
-@media (hover:none){.cover-cta{opacity:1;transform:none}}
-@media (prefers-reduced-motion:reduce){.cover,.cover-cta{transition:none}.cover:hover{transform:none}}
-.cover svg{width:100%;height:auto}
-.cover text{font-family:var(--font-body)}
-.cover .t-display{font-family:var(--font-display);font-variation-settings:"SOFT" 100;font-weight:500;letter-spacing:-.01em}
-.project-body{min-width:0;display:grid;gap:20px}
-.project-meta{display:flex;flex-wrap:wrap;gap:8px}
-.tag{font-size:.78rem;font-weight:600;padding:4px 11px;border-radius:999px;background:var(--blue-soft);color:var(--blue)}
-.tag-main{background:var(--ink);color:var(--field)}
-.project h3{font-size:var(--step-2);font-weight:500}
-.question{font-size:var(--step-1);line-height:1.45;color:var(--ink);padding:4px 0 4px 18px;border-left:2px solid var(--brass);font-family:var(--font-display);font-variation-settings:"SOFT" 100;font-style:italic;font-weight:400}
-.project-body>p{color:var(--muted);max-width:60ch}
-.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden}
-.fact{background:var(--surface);padding:14px 16px;display:grid;gap:2px;align-content:start}
-.fact b{font-family:var(--font-display);font-variation-settings:"SOFT" 100;font-size:var(--step-2);font-weight:500;color:var(--brass);font-variant-numeric:tabular-nums;line-height:1.1}
-.fact span{font-size:.8rem;color:var(--muted);line-height:1.4}
-.findings{margin:0;padding:0;list-style:none;display:grid;gap:10px}
-.findings li{display:grid;grid-template-columns:14px minmax(0,1fr);gap:10px;font-size:.96rem;line-height:1.55}
-.findings li::before{content:"";width:6px;height:6px;margin-top:.62em;border-radius:50%;background:var(--brass)}
-.links{display:flex;flex-wrap:wrap;gap:10px 22px;padding-top:4px}
-.links a{font-weight:600;font-size:.95rem}
-details.more{border-top:1px solid var(--line);padding-top:14px}
-details.more summary{cursor:pointer;font-weight:600;color:var(--ink);font-size:.95rem}
-details.more summary::marker{color:var(--brass)}
-details.more ol{margin:14px 0 0;padding-left:1.3em;display:grid;gap:8px;color:var(--muted);font-size:.94rem}
-details.more ol b{color:var(--ink);font-weight:600}
+/* projects: three concise cards; full write-ups live in each project on GitHub */
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(18px,2.5vw,32px)}
+.card{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;text-decoration:none;color:inherit;transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s,border-color .35s}
+.card-art{aspect-ratio:600/440;background:var(--cover);overflow:hidden}
+.card-art svg{width:100%;height:100%;display:block;transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.card-body{display:flex;flex-direction:column;gap:12px;padding:22px 24px 24px;flex:1}
+.card-kind{font-size:.8rem;font-weight:600;color:var(--blue)}
+.card h3{font-size:var(--step-1);font-weight:500;line-height:1.2}
+.card p{color:var(--muted);font-size:.95rem;line-height:1.55}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:.74rem;font-weight:600;padding:3px 10px;border-radius:999px;background:var(--blue-soft);color:var(--blue)}
+.card-cta{margin-top:auto;padding-top:6px;display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:.92rem;color:var(--brass)}
+.card-cta svg{width:16px;height:16px;transition:transform .3s}
+@media (hover:hover){
+  .card:hover{transform:translateY(-4px);border-color:color-mix(in srgb,var(--brass) 35%,var(--line));box-shadow:0 30px 60px -36px color-mix(in srgb,#5A4A40 50%,transparent)}
+  .card:hover .card-art svg{transform:scale(1.04)}
+  .card:hover .card-cta svg{transform:translate(2px,-2px)}
+}
+@media (prefers-reduced-motion:reduce){.card,.card-art svg,.card-cta svg{transition:none}.card:hover{transform:none}.card:hover .card-art svg{transform:none}}
+@media (max-width:980px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.cards{grid-template-columns:minmax(0,1fr)}}
 
 /* about */
 .about{background:var(--surface);border-block:1px solid var(--line)}
@@ -250,171 +236,141 @@ details.more ol b{color:var(--ink);font-weight:600}
 <section class="section band" id="projects" aria-labelledby="projects-title">
   <div class="wrap">
     <div class="section-head">
-      <h2 id="projects-title">Selected projects</h2>
-      <p>Three end-to-end projects. Each one starts with a business question, works through the data cleaning and analysis, and ends with findings a manager can act on. The full code and files are on GitHub.</p>
+      <h2 id="projects-title">Projects</h2>
+      <p>Three end-to-end projects, from a business question to findings. Open a project to see the full work.</p>
     </div>
-
-    <div class="projects">
-
-      <!-- POWER BI -->
-      <article class="project" aria-labelledby="p-pbi">
-        <a class="cover" href="https://github.com/Kristin-labsker/data-analyst-projects/tree/main/power-bi-cascadia-estates" target="_blank" rel="noopener" aria-label="Open the Cascadia Estates Power BI project on GitHub">
-          <svg viewBox="0 0 800 520" role="img" aria-labelledby="pbi-cap">
-            <title id="pbi-cap">Illustration of the Cascadia Estates report: page tabs, KPI cards, a weekly sales line with a dashed forecast, and a weekday by week heatmap.</title>
-            <rect width="800" height="520" fill="#EEE7E0"/>
-            <rect x="40" y="40" width="720" height="440" rx="14" fill="#F8F4F0" stroke="#E4DAD0"/>
-            <rect x="40" y="40" width="720" height="54" rx="12" fill="#FFFFFF"/>
-            <rect x="40" y="80" width="720" height="14" fill="#FFFFFF"/>
-            <text x="64" y="73" fill="#2A2623" class="t-display" font-size="22">Cascadia Estates</text>
-            <text x="736" y="73" fill="#8C2F47" font-size="15" text-anchor="end">King County housing market</text>
-            <g font-size="14" fill="#8A7B70">
-              <rect x="56" y="105" width="98" height="28" rx="14" fill="#8C2F47"/><text x="105" y="124" text-anchor="middle" fill="#FFFFFF" font-weight="600">Market</text>
-              <text x="198" y="124" text-anchor="middle">Location</text>
-              <text x="282" y="124" text-anchor="middle">Drivers</text>
-              <text x="358" y="124" text-anchor="middle">Time</text>
-              <text x="440" y="124" text-anchor="middle">Price</text>
-              <text x="530" y="124" text-anchor="middle">Process</text>
-            </g>
-            <g>
-              <rect x="56" y="148" width="160" height="72" rx="8" fill="#FFFFFF"/>
-              <rect x="228" y="148" width="160" height="72" rx="8" fill="#FFFFFF"/>
-              <rect x="400" y="148" width="160" height="72" rx="8" fill="#FFFFFF"/>
-              <rect x="572" y="148" width="172" height="72" rx="8" fill="#FFFFFF"/>
-              <g fill="#8A7B70" font-size="13"><text x="72" y="172">Homes sold</text><text x="244" y="172">Median price</text><text x="416" y="172">Price per sq ft</text><text x="588" y="172">Waterfront premium</text></g>
-              <g fill="#DCCFC3"><rect x="72" y="184" width="74" height="18" rx="4" opacity=".9"/><rect x="244" y="184" width="88" height="18" rx="4" opacity=".9"/><rect x="416" y="184" width="60" height="18" rx="4" opacity=".9"/><rect x="588" y="184" width="70" height="18" rx="4" fill="#8C2F47"/></g>
-            </g>
-            <rect x="56" y="236" width="400" height="228" rx="8" fill="#FFFFFF"/>
-            <text x="72" y="262" fill="#2A2623" font-size="15" font-weight="600">Weekly sales with 4-week forecast</text>
-            <g stroke="#E2D6CB" stroke-width="1"><line x1="72" y1="300" x2="440" y2="300"/><line x1="72" y1="350" x2="440" y2="350"/><line x1="72" y1="400" x2="440" y2="400"/><line x1="72" y1="448" x2="440" y2="448"/></g>
-            <polyline fill="none" stroke="#56708A" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" points="80,392 112,372 144,380 176,350 208,358 240,330 272,342 304,300 336,398"/>
-            <polyline fill="none" stroke="#8C2F47" stroke-width="3" stroke-dasharray="7 6" stroke-linecap="round" points="336,398 362,330 388,322 414,314 436,306"/>
-            <circle cx="304" cy="300" r="5" fill="#2A2623"/>
-            <rect x="472" y="236" width="272" height="228" rx="8" fill="#FFFFFF"/>
-            <text x="488" y="262" fill="#2A2623" font-size="15" font-weight="600">Sales calendar</text>
-            <g id="heat"></g>
-          </svg>
-        <span class="cover-cta" aria-hidden="true">Open on GitHub</span></a>
-        <div class="project-body">
-          <div class="project-meta"><span class="tag tag-main">Power BI</span><span class="tag">DAX</span><span class="tag">Data modeling</span><span class="tag">Report design</span></div>
-          <h3 id="p-pbi">Cascadia Estates: King County housing market report</h3>
-          <p class="question">Where, when and what kind of homes sell in King County, and which deals fall outside the normal price range?</p>
-          <p>A seven-page interactive report built for the owner of a real-estate brokerage. It covers about 4,600 home sales from May to July 2014 and lets the owner move from a market overview down to single cities, property features and unusual deals.</p>
-          <ul class="findings">
-            <li>Star schema with a Sales fact table and Date and Location dimensions, plus a Region to City drill-down hierarchy.</li>
-            <li>Advanced DAX: IQR outlier detection, TOPN rankings, an SVG sales-calendar heatmap and a linear-trend forecast four weeks ahead.</li>
-            <li>Bookmark tabs that switch the price view between all homes, standard deals and outliers, a custom tooltip page, and cross-filtering between visuals.</li>
-            <li>A Process Notes page that documents the data, cleaning, model and every design decision.</li>
-          </ul>
-          <details class="more">
-            <summary>Report pages</summary>
-            <ol>
-              <li><b>About the Project.</b> Topic and research questions.</li>
-              <li><b>Market Overview.</b> KPIs, homes by region with drill-down, weekly trend and forecast, price bands.</li>
-              <li><b>Location &amp; Price.</b> City scatter on a log scale against the county median, top 10 cities.</li>
-              <li><b>Property Drivers.</b> Waterfront, view and renovation premiums, size bands and bedrooms.</li>
-              <li><b>Time &amp; Activity.</b> Weekday by week heatmap, busiest weekdays, daily sales pace by month.</li>
-              <li><b>Price Landscape.</b> Price distribution with tabs for standard deals and outliers by city.</li>
-              <li><b>Process Notes.</b> Data, cleaning, model, analysis and key conclusions.</li>
-            </ol>
-          </details>
-          <div class="links">
-            <a href="https://github.com/Kristin-labsker/data-analyst-projects/tree/main/power-bi-cascadia-estates" target="_blank" rel="noopener">Project files on GitHub</a>
-            <a href="https://github.com/Kristin-labsker/data-analyst-projects/raw/main/power-bi-cascadia-estates/Cascadia_Estates.pbix" target="_blank" rel="noopener">Download the .pbix report</a>
-          </div>
+    <div class="cards">
+      <a class="card" href="https://github.com/Kristin-labsker/data-analyst-projects/blob/main/sql-wide-world-importers/WideWorldImporters_Analysis.sql" target="_blank" rel="noopener">
+        <div class="card-art"><svg viewBox="0 0 600 440" role="img" aria-label="Illustration of a database with a results table">
+<defs>
+ <linearGradient id="sq-bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F4EEE8"/><stop offset="1" stop-color="#E6DBD1"/></linearGradient>
+ <linearGradient id="sq-cyl" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6E2235"/><stop offset=".55" stop-color="#9A3A52"/><stop offset="1" stop-color="#6E2235"/></linearGradient>
+ <linearGradient id="sq-top" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#C9707F"/><stop offset="1" stop-color="#A4485D"/></linearGradient>
+ <filter id="sq-sh" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="18" stdDeviation="16" flood-color="#5A4A40" flood-opacity=".22"/></filter>
+</defs>
+<rect width="600" height="440" fill="url(#sq-bg)"/>
+<circle cx="470" cy="90" r="120" fill="#FFFFFF" opacity=".35"/>
+<g filter="url(#sq-sh)">
+ <g transform="translate(120,110)">
+  <path d="M0 40v160c0 22 50 40 112 40s112-18 112-40V40" fill="url(#sq-cyl)"/>
+  <path d="M0 93c0 22 50 40 112 40s112-18 112-40" fill="none" stroke="#F4D9DF" stroke-opacity=".55" stroke-width="3"/>
+  <path d="M0 146c0 22 50 40 112 40s112-18 112-40" fill="none" stroke="#F4D9DF" stroke-opacity=".55" stroke-width="3"/>
+  <ellipse cx="112" cy="40" rx="112" ry="40" fill="url(#sq-top)"/>
+  <ellipse cx="112" cy="40" rx="80" ry="26" fill="none" stroke="#F7E3E7" stroke-opacity=".5" stroke-width="2"/>
+  <circle cx="190" cy="118" r="5" fill="#F7E3E7"/><circle cx="190" cy="171" r="5" fill="#F7E3E7"/><circle cx="190" cy="224" r="5" fill="#F7E3E7"/>
+ </g>
+ <g transform="translate(318,150)">
+  <rect width="190" height="168" rx="16" fill="#FFFFFF"/>
+  <rect width="190" height="40" rx="16" fill="#E6ECF0"/><rect y="24" width="190" height="16" fill="#E6ECF0"/>
+  <rect x="18" y="15" width="44" height="10" rx="5" fill="#56708A"/><rect x="76" y="15" width="40" height="10" rx="5" fill="#56708A" opacity=".55"/><rect x="130" y="15" width="40" height="10" rx="5" fill="#56708A" opacity=".55"/>
+  <g fill="#D9CEC4"><rect x="18" y="58" width="44" height="9" rx="4.5"/><rect x="76" y="58" width="40" height="9" rx="4.5"/><rect x="130" y="58" width="30" height="9" rx="4.5"/>
+  <rect x="18" y="86" width="44" height="9" rx="4.5"/><rect x="76" y="86" width="40" height="9" rx="4.5"/><rect x="130" y="86" width="36" height="9" rx="4.5"/>
+  <rect x="18" y="142" width="44" height="9" rx="4.5"/><rect x="76" y="142" width="40" height="9" rx="4.5"/><rect x="130" y="142" width="26" height="9" rx="4.5"/></g>
+  <rect x="8" y="104" width="174" height="28" rx="8" fill="#F6E9EC"/>
+  <rect x="18" y="114" width="44" height="9" rx="4.5" fill="#8C2F47"/><rect x="76" y="114" width="40" height="9" rx="4.5" fill="#8C2F47"/><rect x="130" y="114" width="40" height="9" rx="4.5" fill="#8C2F47"/>
+ </g>
+</g>
+<path d="M300 210 C 312 210, 306 232, 318 232" fill="none" stroke="#8C2F47" stroke-width="2.5" stroke-dasharray="4 5" stroke-linecap="round"/>
+<g transform="translate(330,92)"><rect width="132" height="38" rx="19" fill="#2A2623"/><text x="66" y="25" text-anchor="middle" fill="#FBF9F6" font-family="ui-monospace,Menlo,Consolas,monospace" font-size="15" font-weight="600" letter-spacing="1">SELECT *</text></g>
+</svg></div>
+        <div class="card-body">
+          <span class="card-kind">SQL</span>
+          <h3>Wide World Importers</h3>
+          <p>Ten business questions on a wholesale company's database: revenue growth, top customers and products, and churn risk.</p>
+          <div class="tags"><span class="tag">T-SQL</span><span class="tag">SQL Server</span><span class="tag">Window functions</span></div>
+          <span class="card-cta">View project <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 11.5l7-7M6 4.5h5.5V10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </div>
-      </article>
-
-      <!-- PYTHON -->
-      <article class="project" aria-labelledby="p-py">
-        <a class="cover" href="https://github.com/Kristin-labsker/data-analyst-projects/blob/main/python-king-county-house-sales/Washington_House_Sales.ipynb" target="_blank" rel="noopener" aria-label="Open the King County Python notebook on GitHub">
-          <svg viewBox="0 0 800 520" role="img" aria-labelledby="py-cap">
-            <title id="py-cap">Bar chart of each home feature's correlation with sale price. Living area is highest at 0.70; lot size, condition and year built are near zero.</title>
-            <rect width="800" height="520" fill="#EEE7E0"/>
-            <text x="48" y="64" fill="#8C2F47" font-size="17" font-weight="600">What drives home prices?</text>
-            <text x="48" y="100" fill="#2A2623" class="t-display" font-size="30">Correlation with sale price</text>
-            <g id="corr" transform="translate(0,130)"></g>
-            <text x="48" y="496" fill="#8A7B70" font-size="14">King County, WA. 4,545 sales after cleaning, May to July 2014. Pearson r.</text>
-          </svg>
-        <span class="cover-cta" aria-hidden="true">Open on GitHub</span></a>
-        <div class="project-body">
-          <div class="project-meta"><span class="tag tag-main">Python</span><span class="tag">pandas</span><span class="tag">matplotlib</span><span class="tag">seaborn</span></div>
-          <h3 id="p-py">What drives home prices in King County?</h3>
-          <p class="question">Which physical and location features are most strongly related to home prices?</p>
-          <p>Exploratory analysis of 4,600 home sales and 18 columns in a Jupyter notebook. Every cleaning decision is explained, and each chart ends with a written conclusion.</p>
-          <div class="facts">
-            <div class="fact"><b>0.70</b><span>correlation between living area and price, the strongest single factor</span></div>
-            <div class="fact"><b>4.3×</b><span>Medina's median price compared with Seattle's</span></div>
-            <div class="fact"><b>34%</b><span>of all sales are in Seattle, yet it ranks 18th of 44 cities on median price</span></div>
-          </div>
-          <ul class="findings">
-            <li>Cleaned the data with documented rules: removed 55 rows (1.2%) with $0 prices or extreme values, and fixed rows where build and renovation years were swapped instead of deleting them.</li>
-            <li>Showed that size alone does not explain the price gap between cities. Living area relates to price almost equally in Seattle (0.75) and elsewhere (0.73), so location adds a premium on top.</li>
-            <li>Found that busier weeks had lower median prices (r = −0.75 over 9 full weeks), most likely because more lower-priced homes sold in those weeks.</li>
-            <li>Turned the results into practical advice for buyers, sellers and agents.</li>
-          </ul>
-          <div class="links">
-            <a href="https://github.com/Kristin-labsker/data-analyst-projects/blob/main/python-king-county-house-sales/Washington_House_Sales.ipynb" target="_blank" rel="noopener">View the notebook on GitHub</a>
-          </div>
+      </a>
+      <a class="card" href="https://github.com/Kristin-labsker/data-analyst-projects/blob/main/python-king-county-house-sales/Washington_House_Sales.ipynb" target="_blank" rel="noopener">
+        <div class="card-art"><svg viewBox="0 0 600 440" role="img" aria-label="Illustration of a house examined with a magnifying glass, with a price tag and a trend line">
+<defs>
+ <linearGradient id="py-bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#EEF2F5"/><stop offset="1" stop-color="#D8E1E9"/></linearGradient>
+ <linearGradient id="py-roof" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9A3A52"/><stop offset="1" stop-color="#6E2235"/></linearGradient>
+ <linearGradient id="py-wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#F1ECE6"/></linearGradient>
+ <filter id="py-sh" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="18" stdDeviation="16" flood-color="#3E4F60" flood-opacity=".2"/></filter>
+ <clipPath id="py-lens"><circle cx="0" cy="0" r="58"/></clipPath>
+</defs>
+<rect width="600" height="440" fill="url(#py-bg)"/>
+<circle cx="120" cy="80" r="110" fill="#FFFFFF" opacity=".4"/>
+<polyline points="40,360 130,330 210,342 300,290 390,300 470,230 560,200" fill="none" stroke="#56708A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity=".45"/>
+<g fill="#56708A" opacity=".45"><circle cx="130" cy="330" r="5"/><circle cx="300" cy="290" r="5"/><circle cx="470" cy="230" r="5"/></g>
+<g filter="url(#py-sh)">
+ <g transform="translate(170,120)">
+  <rect x="20" y="96" width="200" height="140" rx="10" fill="url(#py-wall)"/>
+  <path d="M0 104 L120 14 L240 104 Z" fill="url(#py-roof)" stroke="url(#py-roof)" stroke-width="10" stroke-linejoin="round"/>
+  <rect x="160" y="30" width="26" height="48" rx="4" fill="#6E2235"/>
+  <rect x="98" y="160" width="44" height="76" rx="8" fill="#56708A"/><circle cx="132" cy="200" r="3.5" fill="#E6ECF0"/>
+  <rect x="44" y="128" width="40" height="40" rx="8" fill="#D8E1E9"/><rect x="156" y="128" width="40" height="40" rx="8" fill="#D8E1E9"/>
+  <path d="M64 128v40M44 148h40M176 128v40M156 148h40" stroke="#FFFFFF" stroke-width="3"/>
+ </g>
+ <g transform="translate(418,138) rotate(-8)">
+  <path d="M0 18 L18 0 H88 a10 10 0 0 1 10 10 V44 a10 10 0 0 1 -10 10 H18 Z" fill="#FFFFFF"/>
+  <circle cx="20" cy="27" r="6" fill="#E6ECF0"/>
+  <text x="58" y="34" text-anchor="middle" fill="#8C2F47" font-family="Georgia,serif" font-size="20" font-weight="700">$$$</text>
+ </g>
+ <g transform="translate(392,300)">
+  <rect x="34" y="34" width="20" height="70" rx="10" transform="rotate(-45 44 69)" fill="#2A2623"/>
+  <circle cx="0" cy="0" r="66" fill="#FFFFFF" opacity=".55"/>
+  <circle cx="0" cy="0" r="58" fill="none" stroke="#2A2623" stroke-width="12"/>
+  <g clip-path="url(#py-lens)"><g fill="#8C2F47"><rect x="-34" y="10" width="14" height="26" rx="3"/><rect x="-12" y="-6" width="14" height="42" rx="3"/><rect x="10" y="-24" width="14" height="60" rx="3"/></g></g>
+ </g>
+</g>
+</svg></div>
+        <div class="card-body">
+          <span class="card-kind">Python</span>
+          <h3>What drives home prices?</h3>
+          <p>Exploratory analysis of 4,600 home sales in King County, from data cleaning to the features that drive price.</p>
+          <div class="tags"><span class="tag">pandas</span><span class="tag">matplotlib</span><span class="tag">seaborn</span></div>
+          <span class="card-cta">View project <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 11.5l7-7M6 4.5h5.5V10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </div>
-      </article>
-
-      <!-- SQL -->
-      <article class="project" aria-labelledby="p-sql">
-        <a class="cover" href="https://github.com/Kristin-labsker/data-analyst-projects/blob/main/sql-wide-world-importers/WideWorldImporters_Analysis.sql" target="_blank" rel="noopener" aria-label="Open the Wide World Importers SQL script on GitHub">
-          <svg viewBox="0 0 800 520" role="img" aria-labelledby="sql-cap">
-            <title id="sql-cap">Stacked bar: 459 of 663 Novelty Shop stores, 69 percent, belong to two chains, Wingtip Toys and Tailspin Toys.</title>
-            <rect width="800" height="520" fill="#EEE7E0"/>
-            <g font-family="ui-monospace,Menlo,Consolas,monospace" font-size="17" fill="#B3A396">
-              <text x="48" y="64">WITH tbl AS (</text>
-              <text x="48" y="90">  SELECT cat.CustomerCategoryName,</text>
-              <text x="48" y="116">    CASE WHEN cus.CustomerName LIKE 'Wingtip%'</text>
-              <text x="48" y="142">         THEN 'wingtip' ...</text>
-            </g>
-            <text x="48" y="212" fill="#8C2F47" font-size="18" font-weight="600">Customer concentration risk</text>
-            <text x="44" y="290" fill="#2A2623" class="t-display" font-size="88">69%</text>
-            <text x="48" y="326" fill="#8A7B70" font-size="19">of Novelty Shop stores belong to just two chains</text>
-            <g transform="translate(48,356)">
-              <rect class="bar" width="704" height="52" rx="6" fill="#D3DDE6"/>
-              <rect class="bar" width="487" height="52" rx="6" fill="#8C2F47"/>
-              <rect x="481" width="6" height="52" fill="#8C2F47"/>
-              <text x="16" y="32" fill="#FFFFFF" font-size="17" font-weight="600">Wingtip Toys + Tailspin Toys: 459 stores</text>
-              <text x="688" y="32" fill="#2A2623" font-size="17" text-anchor="end">Others: 204</text>
-            </g>
-            <text x="48" y="458" fill="#8A7B70" font-size="15">Of 663 stores in total. WideWorldImporters database, T-SQL.</text>
-          </svg>
-        <span class="cover-cta" aria-hidden="true">Open on GitHub</span></a>
-        <div class="project-body">
-          <div class="project-meta"><span class="tag tag-main">SQL</span><span class="tag">T-SQL</span><span class="tag">Window functions</span><span class="tag">SQL Server</span></div>
-          <h3 id="p-sql">Wide World Importers: revenue, customers and churn risk</h3>
-          <p class="question">How is the business growing, who are the customers that matter most, and where is the risk?</p>
-          <p>Ten business questions answered with T-SQL on Microsoft's WideWorldImporters database, a wholesale company with sales, purchasing and warehouse tables.</p>
-          <ul class="findings">
-            <li>Measured yearly revenue growth with an annualized run rate, so partial years compare fairly (CTEs and LAG).</li>
-            <li>Flagged potential churn: customers whose time since their last order is more than twice their usual gap between orders.</li>
-            <li>Ranked the top customers per quarter and the top products by revenue (DENSE_RANK, TOP).</li>
-            <li>Found the main business risk: two chains, Wingtip Toys and Tailspin Toys, hold 459 of 663 stores (69%). Losing either one would cut the customer base by tens of percent.</li>
-          </ul>
-          <details class="more">
-            <summary>All 10 questions</summary>
-            <ol>
-              <li><b>Yearly growth.</b> Revenue per year, annualized, with growth rate.</li>
-              <li><b>Top customers.</b> Five highest-revenue customers in every quarter.</li>
-              <li><b>Best-selling products.</b> Top 10 items by total sales value.</li>
-              <li><b>Product margin.</b> Ranking items by retail price minus unit price.</li>
-              <li><b>Supplier catalog.</b> Each supplier with its product list (STRING_AGG).</li>
-              <li><b>Top customers by geography.</b> City, country, continent and region.</li>
-              <li><b>Monthly sales.</b> Monthly totals, yearly subtotals and running totals (ROLLUP).</li>
-              <li><b>Order seasonality.</b> Orders per month across 2013 to 2016 (PIVOT).</li>
-              <li><b>Churn risk.</b> Days between orders against days since the last order.</li>
-              <li><b>Customer concentration.</b> Customer share per category, counting each chain once.</li>
-            </ol>
-          </details>
-          <div class="links">
-            <a href="https://github.com/Kristin-labsker/data-analyst-projects/blob/main/sql-wide-world-importers/WideWorldImporters_Analysis.sql" target="_blank" rel="noopener">View the SQL script on GitHub</a>
-          </div>
+      </a>
+      <a class="card" href="https://github.com/Kristin-labsker/data-analyst-projects/tree/main/power-bi-cascadia-estates" target="_blank" rel="noopener">
+        <div class="card-art"><svg viewBox="0 0 600 440" role="img" aria-label="Illustration of an interactive dashboard with KPI cards, a bar chart and a donut chart">
+<defs>
+ <linearGradient id="pb-bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F6ECEA"/><stop offset="1" stop-color="#E9DAD3"/></linearGradient>
+ <linearGradient id="pb-bar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#A4485D"/><stop offset="1" stop-color="#7A2A3F"/></linearGradient>
+ <filter id="pb-sh" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="18" stdDeviation="16" flood-color="#5A4A40" flood-opacity=".22"/></filter>
+</defs>
+<rect width="600" height="440" fill="url(#pb-bg)"/>
+<circle cx="500" cy="380" r="140" fill="#FFFFFF" opacity=".35"/>
+<g filter="url(#pb-sh)">
+ <rect x="70" y="70" width="400" height="290" rx="18" fill="#FFFFFF"/>
+ <rect x="70" y="70" width="400" height="44" rx="18" fill="#2A2623"/><rect x="70" y="96" width="400" height="18" fill="#2A2623"/>
+ <circle cx="96" cy="92" r="6" fill="#E9C9CF"/><rect x="112" y="87" width="90" height="10" rx="5" fill="#FBF9F6" opacity=".85"/>
+ <g><rect x="320" y="85" width="44" height="14" rx="7" fill="#8C2F47"/><rect x="372" y="85" width="36" height="14" rx="7" fill="#FBF9F6" opacity=".25"/><rect x="416" y="85" width="36" height="14" rx="7" fill="#FBF9F6" opacity=".25"/></g>
+ <g transform="translate(90,132)">
+  <rect width="114" height="56" rx="12" fill="#F6F1EC"/><rect x="14" y="14" width="48" height="8" rx="4" fill="#B6A79B"/><rect x="14" y="30" width="70" height="14" rx="7" fill="#2A2623"/>
+  <rect x="128" width="114" height="56" rx="12" fill="#F6F1EC"/><rect x="142" y="14" width="48" height="8" rx="4" fill="#B6A79B"/><rect x="142" y="30" width="60" height="14" rx="7" fill="#2A2623"/>
+  <rect x="256" width="114" height="56" rx="12" fill="#F6E9EC"/><rect x="270" y="14" width="48" height="8" rx="4" fill="#C9909C"/><rect x="270" y="30" width="56" height="14" rx="7" fill="#8C2F47"/>
+ </g>
+ <g transform="translate(90,206)">
+  <rect width="226" height="136" rx="12" fill="#F6F1EC"/>
+  <g fill="#C8D3DD"><rect x="20" y="78" width="24" height="42" rx="5"/><rect x="56" y="58" width="24" height="62" rx="5"/><rect x="128" y="66" width="24" height="54" rx="5"/><rect x="164" y="40" width="24" height="80" rx="5"/></g>
+  <rect x="92" y="24" width="24" height="96" rx="5" fill="url(#pb-bar)"/>
+  <path d="M20 120h176" stroke="#D9CEC4" stroke-width="2"/>
+ </g>
+ <g transform="translate(330,206)">
+  <rect width="130" height="136" rx="12" fill="#F6F1EC"/>
+  <circle cx="65" cy="68" r="38" fill="none" stroke="#D8E1E9" stroke-width="16"/>
+  <circle cx="65" cy="68" r="38" fill="none" stroke="#56708A" stroke-width="16" stroke-dasharray="120 239" transform="rotate(-90 65 68)"/>
+  <circle cx="65" cy="68" r="38" fill="none" stroke="#8C2F47" stroke-width="16" stroke-dasharray="58 239" stroke-dashoffset="-122" transform="rotate(-90 65 68)"/>
+ </g>
+</g>
+<g filter="url(#pb-sh)" transform="translate(430,46)">
+ <rect width="120" height="84" rx="16" fill="#FFFFFF"/>
+ <polyline points="18,62 42,48 64,54 86,30 104,22" fill="none" stroke="#8C2F47" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+ <polyline points="86,30 104,22" fill="none" stroke="#8C2F47" stroke-width="3.5" stroke-dasharray="4 5"/>
+ <circle cx="86" cy="30" r="5" fill="#8C2F47"/>
+</g>
+</svg></div>
+        <div class="card-body">
+          <span class="card-kind">Power BI</span>
+          <h3>Cascadia Estates</h3>
+          <p>An interactive seven-page report on the King County housing market, built for the owner of a real-estate brokerage.</p>
+          <div class="tags"><span class="tag">Power Query</span><span class="tag">DAX</span><span class="tag">Data modeling</span></div>
+          <span class="card-cta">View project <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 11.5l7-7M6 4.5h5.5V10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </div>
-      </article>
-
+      </a>
     </div>
   </div>
 </section>
@@ -484,38 +440,6 @@ details.more ol b{color:var(--ink);font-weight:600}
 (function(){
   var NS="http://www.w3.org/2000/svg";
   function el(tag,attrs,text){var e=document.createElementNS(NS,tag);for(var k in attrs)e.setAttribute(k,attrs[k]);if(text!=null)e.textContent=text;return e}
-
-  // Correlation with price, from the notebook's heatmap (Pearson r).
-  var corr=[["Living area",.70],["Above-ground area",.59],["Bathrooms",.52],["View",.38],["Bedrooms",.33],["Basement area",.33],["Floors",.25],["Waterfront",.23],["Lot size",.07],["Condition",.05],["Year built",.01]];
-  var g=document.getElementById("corr");
-  if(g){
-    var x0=210,w=680,rowH=30;           // scale: r=1 -> 680px, axis to 0.75
-    [0,.25,.5,.75].forEach(function(t){
-      g.appendChild(el("line",{x1:x0+t*w,x2:x0+t*w,y1:-6,y2:corr.length*rowH-6,stroke:"#E0D6CC","stroke-width":1}));
-      g.appendChild(el("text",{x:x0+t*w,y:corr.length*rowH+12,fill:"#A69689","font-size":13,"text-anchor":"middle"},t.toFixed(2)));
-    });
-    corr.forEach(function(d,i){
-      var y=i*rowH, top=i===0;
-      g.appendChild(el("text",{x:x0-14,y:y+15,fill:top?"#2A2623":"#76695F","font-size":16,"text-anchor":"end","font-weight":top?600:400},d[0]));
-      g.appendChild(el("rect",{class:"bar",x:x0,y:y+1,width:Math.max(d[1]*w,3),height:21,rx:3,fill:top?"#8C2F47":(d[1]>=.3?"#7F97AE":"#E0D4C8")}));
-      g.appendChild(el("text",{x:x0+Math.max(d[1]*w,3)+8,y:y+15,fill:top?"#2A2623":"#8A7B70","font-size":15},d[1].toFixed(2)));
-    });
-  }
-
-  // Heatmap motif for the Power BI cover: 7 weekdays x 10 weeks, illustrative shading only.
-  var h=document.getElementById("heat");
-  if(h){
-    var shades=["#EEF1F4","#D3DDE6","#AFC0D0","#8AA2B9","#8C2F47"];
-    var days=["M","T","W","T","F","S","S"];
-    for(var r=0;r<7;r++){
-      h.appendChild(el("text",{x:494,y:290+r*24,fill:"#A69689","font-size":10,"text-anchor":"middle"},days[r]));
-      for(var c=0;c<10;c++){
-        var v=(r<5?2:0)+((c*7+r*3)%5===0?1:0)+((r===0||r===1)&&c===8?2:0)-(c===9?1:0)-(r===6?0:0);
-        v=Math.max(0,Math.min(4,v+((c+r)%3===0?1:0)));
-        h.appendChild(el("rect",{x:506+c*23,y:278+r*24,width:19,height:19,rx:3,fill:shades[v]}));
-      }
-    }
-  }
 
   var btn=document.getElementById("copy-email"),em=document.getElementById("email");
   if(btn&&em){btn.addEventListener("click",function(){
